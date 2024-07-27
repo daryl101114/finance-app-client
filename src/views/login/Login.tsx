@@ -1,34 +1,57 @@
-import { useState, useEffect } from 'react';
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import '@/App.css';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { useNavigate } from 'react-router-dom';
-import { IUser } from '../../configs/types/User';
-import registerUser from '../../api/login/login';
+import { ILoginUser } from '../../configs/types/User';
+import { loginUser } from '../../api/login/login';
 import { Button } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
-const HomePage = () => {
-  // const [fname, setFname] = useState<string>("");
-  // const [lname, setlname] = useState<string>("");
+const Login: React.FC = () => {
   const [username, setUserName] = useState<string>('');
-  // const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
-  // useEffect(registerUser(),[])
+
+  const { authenticate, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    console.log(isAuthenticated, 'AUTH');
+  }, []);
+
   const handleRegister = async () => {
-    const userObj: IUser = {
+    const userObj: ILoginUser = {
       username: username,
       password: password,
     };
-    console.log(userObj);
-    const res = await registerUser(userObj);
-    if (res.status !== 200) clearInputFields();
+    const res = await loginUser(userObj);
+    if (res.status !== 200) {
+      clearInputFields();
+      return;
+    }
+    axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+    localStorage.setItem('token', JSON.stringify(res.data.token));
+    localStorage.setItem('isAuthorized', 'true');
+
+    // setting time of when 10 minute session should expire & storing in localStorage
+    const now = new Date();
+    const accessTokenExpiryTime = new Date(
+      now.setMinutes(now.getMinutes() + 9),
+    );
+
+    localStorage.setItem(
+      'accessTokenExpiryTime',
+      JSON.stringify(accessTokenExpiryTime),
+    );
+
+    authenticate();
+    handleRedirect('/');
+    clearInputFields();
   };
 
-  const handleRedirect = () => {
-    navigate('/register-user');
+  const handleRedirect = (text: string): void => {
+    navigate(text);
   };
   /**
    * Clear Input Fields
@@ -80,7 +103,10 @@ const HomePage = () => {
           >
             Login User
           </Button>
-          <Button onClick={handleRedirect} className="w-full">
+          <Button
+            onClick={() => handleRedirect('/register-user')}
+            className="w-full"
+          >
             Register User
           </Button>
         </Box>
@@ -89,4 +115,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Login;

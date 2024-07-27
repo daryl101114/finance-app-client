@@ -1,17 +1,27 @@
-import { IUser } from '@/configs/types/User.ts';
+import { IUser, ILoginUser } from '../../configs/types/User';
 import axios, { AxiosResponse } from 'axios';
-const registerUser = async (user: IUser): Promise<AxiosResponse> => {
+export const registerUser = async (user: IUser): Promise<AxiosResponse> => {
   try {
     const res: AxiosResponse = await axios.post(
       'http://localhost:4000/api/registerUser',
       user,
     );
-    console.log(res);
-    return res;
+    return JSON.parse(JSON.stringify(res));
   } catch (error: any) {
     console.error(error);
     throw new Error('Register user failed!');
   }
 };
 
-export default registerUser;
+export const loginUser = async (user: ILoginUser): Promise<AxiosResponse> => {
+  try {
+    const res: AxiosResponse = await axios.post(
+      'http://localhost:4000/api/loginUser',
+      user,
+    );
+    return JSON.parse(JSON.stringify(res));
+  } catch (err: any) {
+    console.error('@LoginUser: ', err);
+    throw new Error('Login Failed');
+  }
+};
