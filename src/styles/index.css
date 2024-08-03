@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -66,8 +68,12 @@
   body {
     @apply text-foreground;
     background-color: #f0f4f8;
+    margin: 0px !important;
   }
   #root {
     height: 100dvh;
   }
+  /* .mt-5 {
+    margin-top: 5rem;
+  } */
 }

@@ -1,7 +1,8 @@
+import AddExpenseModal from '../../components/modals/AddExpenseModal';
 const Dashboard = () => {
   return (
     <>
-      <h1>Hello World</h1>
+      <div className="mt-5 h-64 bg-primary-100">Test</div>
     </>
   );
 };

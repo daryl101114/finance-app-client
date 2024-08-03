@@ -16,6 +16,7 @@ interface AuthorizedType {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  console.log(children);
   const [isAuthenticated, setIsAuthenticated] = useState(
     getItem<AuthorizedType>('isAuthorized'),
   );
@@ -41,7 +42,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }),
     [isAuthenticated],
   );
-  console.log(isAuthenticated);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

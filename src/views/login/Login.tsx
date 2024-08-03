@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '@/App.css';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { ILoginUser } from '../../configs/types/User';
 import { loginUser } from '../../api/login/login';
 import { Button } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const Login: React.FC = () => {
@@ -57,60 +56,73 @@ const Login: React.FC = () => {
    * Clear Input Fields
    */
   const clearInputFields = () => {
-    // setFname("")
-    // setlname("")
     setUserName('');
-    // setEmail("")
     setPassword('');
   };
   return (
     <>
-      <div className="flex h-full flex-wrap content-center justify-center bg-neutral-100">
-        <div className="m-3 w-full">
-          <h1 className="text-bold text-3xl text-primary-600">FinTracker</h1>
+      <div className="grid grid-cols-2">
+        <div className="bg-primary-100">
+          <img
+            className="h-lvh w-full"
+            src="../../../public/money-investment.svg"
+            alt="Money Invest"
+          />
         </div>
-        <Box
-          className="gap flex w-1/2 flex-wrap gap-3"
-          component="form"
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            className="flex-auto"
-            required
-            id="outlined-required"
-            label="User Name"
-            onChange={(e: any) => {
-              setUserName(e.target.value);
-            }}
-            value={username ?? ''}
-          />
-
-          <TextField
-            className="w-full"
-            required
-            id="outlined-required"
-            label="Password"
-            onChange={(e: any) => {
-              setPassword(e.target.value);
-            }}
-            value={password ?? ''}
-          />
-          <Button
-            onClick={handleRegister}
-            className="w-full"
-            variant="contained"
+        <div className="flex h-full flex-wrap content-center justify-center">
+          {/* <div className="flex w-full justify-center">
+            
+          </div> */}
+          <Box
+            className="gap flex w-1/2 flex-wrap gap-3"
+            component="form"
+            noValidate
+            autoComplete="off"
           >
-            Login User
-          </Button>
-          <Button
-            onClick={() => handleRedirect('/register-user')}
-            className="w-full"
-          >
-            Register User
-          </Button>
-        </Box>
+            <span className="m-0">
+              <p className="text-bold text-3xl text-primary-600">FinTracker</p>
+              <p className="text-neutral-600">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </p>
+            </span>
+            <TextField
+              className="flex-auto"
+              required
+              id="outlined-required"
+              label="User Name"
+              onChange={(e: any) => {
+                setUserName(e.target.value);
+              }}
+              value={username ?? ''}
+            />
+            <TextField
+              className="w-full"
+              required
+              id="outlined-required"
+              label="Password"
+              onChange={(e: any) => {
+                setPassword(e.target.value);
+              }}
+              value={password ?? ''}
+            />
+            <Button
+              onClick={handleRegister}
+              className="w-full bg-primary-600"
+              variant="contained"
+            >
+              Login User
+            </Button>
+            <Button
+              onClick={() => handleRedirect('/register-user')}
+              className="w-full text-primary-600"
+            >
+              Register User
+            </Button>
+          </Box>
+        </div>
       </div>
+
+      {/*  */}
     </>
   );
 };

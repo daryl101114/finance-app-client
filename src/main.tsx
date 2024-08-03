@@ -11,6 +11,36 @@ import store from './store/store';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
 import { AuthProvider } from './hooks/useAuth';
+import {
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from '@mui/material/styles';
+import axios from 'axios';
+import { getItem } from './lib/utils.ts';
+const rootElement = document.getElementById('root');
+
+const theme = createTheme({
+  components: {
+    MuiPopover: {
+      defaultProps: {
+        container: rootElement,
+      },
+    },
+    MuiPopper: {
+      defaultProps: {
+        container: rootElement,
+      },
+    },
+    MuiDialog: {
+      defaultProps: {
+        container: rootElement,
+      },
+    },
+  },
+});
+
+// Routes
 const router = createBrowserRouter([
   {
     path: '/login',
@@ -26,6 +56,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
+      //Add route guards
       <PrivateRoutes>
         <App />
       </PrivateRoutes>
@@ -39,12 +70,24 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-console.log('hit');
+
+//Attaches the bearer token to the Authoriation header
+axios.interceptors.request.use(function (config) {
+  const token: string = getItem('token') || '';
+  config.headers.Authorization = `Bearer ${token}`;
+
+  return config;
+});
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <AuthProvider>
       <React.StrictMode>
-        <RouterProvider router={router} />
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </StyledEngineProvider>
       </React.StrictMode>
     </AuthProvider>
   </Provider>,
