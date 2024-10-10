@@ -4,7 +4,7 @@ import Navbar from './views/navigation/Navbar';
 function App() {
   return (
     <>
-      <div className="px-44 py-3">
+      <div className="">
         <Navbar />
         <div>
           {/* Child components are injected here */}

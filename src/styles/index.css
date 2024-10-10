@@ -63,17 +63,19 @@
 
 @layer base {
   * {
-    @apply border-border;
+    /* @apply border-border; */
+    /* font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
+    font-family:  "Proxima Nova", system-ui, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
   }
   body {
-    @apply text-foreground;
+    /* @apply text-foreground; */
     background-color: #f0f4f8;
-    margin: 0px !important;
+   
   }
   #root {
     height: 100dvh;
   }
-  /* .mt-5 {
-    margin-top: 5rem;
-  } */
 }

@@ -14,6 +14,11 @@ module.exports = {
     preflight: false,
   },
   theme: {
+    fontFamily:{
+      'sans': ['ui-sans-serif', 'system-ui'],
+'      display': ['Oswald'],
+      'body': ['"Open Sans"'],
+    },
     container: {
       center: true,
       padding: '2rem',

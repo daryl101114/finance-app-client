@@ -11,34 +11,34 @@ import store from './store/store';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
 import { AuthProvider } from './hooks/useAuth';
-import {
-  ThemeProvider,
-  StyledEngineProvider,
-  createTheme,
-} from '@mui/material/styles';
+// import {
+//   ThemeProvider,
+//   StyledEngineProvider,
+//   createTheme,
+// } from '@mui/material/styles';
 import axios from 'axios';
 import { getItem } from './lib/utils.ts';
 const rootElement = document.getElementById('root');
 
-const theme = createTheme({
-  components: {
-    MuiPopover: {
-      defaultProps: {
-        container: rootElement,
-      },
-    },
-    MuiPopper: {
-      defaultProps: {
-        container: rootElement,
-      },
-    },
-    MuiDialog: {
-      defaultProps: {
-        container: rootElement,
-      },
-    },
-  },
-});
+// const theme = createTheme({
+//   components: {
+//     MuiPopover: {
+//       defaultProps: {
+//         container: rootElement,
+//       },
+//     },
+//     MuiPopper: {
+//       defaultProps: {
+//         container: rootElement,
+//       },
+//     },
+//     MuiDialog: {
+//       defaultProps: {
+//         container: rootElement,
+//       },
+//     },
+//   },
+// });
 
 // Routes
 const router = createBrowserRouter([
@@ -83,11 +83,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <AuthProvider>
       <React.StrictMode>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </StyledEngineProvider>
+        {/* <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}> */}
+        <RouterProvider router={router} />
+        {/* </ThemeProvider>
+        </StyledEngineProvider> */}
       </React.StrictMode>
     </AuthProvider>
   </Provider>,

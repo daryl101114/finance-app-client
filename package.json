@@ -12,12 +12,6 @@
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@mui/base": "^5.0.0-beta.40",
-    "@mui/icons-material": "^5.16.4",
-    "@mui/material": "^5.16.4",
-    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",

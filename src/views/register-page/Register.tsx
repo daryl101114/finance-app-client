@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+// import Box from '@mui/material/Box';
+// import TextField from '@mui/material/TextField';
 import { IUser } from '../../configs/types/User';
 import { registerUser } from '../../api/login/login';
-import { Button } from '@mui/material';
+// import { Button } from '@mui/material';
 
 const Register = () => {
   const [fname, setFname] = useState<string>('');
@@ -52,7 +52,7 @@ const Register = () => {
           />
         </div>
         <div className="flex h-full flex-wrap content-center justify-center">
-          <Box
+          {/* <Box
             className="gap flex w-1/2 flex-wrap gap-3"
             component="form"
             noValidate
@@ -129,7 +129,7 @@ const Register = () => {
             >
               Alsready have Account
             </Button>
-          </Box>
+          </Box> */}
         </div>
       </div>
       {/* <div className="flex h-full flex-wrap content-center justify-center">

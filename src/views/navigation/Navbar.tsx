@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import {
-  MenuItem,
-  AppBar,
-  Box,
-  Toolbar,
-  Typography,
-  Button,
-} from '@mui/material';
+// import {
+//   MenuItem,
+//   AppBar,
+//   Box,
+//   Toolbar,
+//   Typography,
+//   Button,
+// } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AddExpenseModal from '../../components/modals/AddExpenseModal';
 
@@ -38,7 +38,7 @@ const Navbar = () => {
   };
   return (
     <>
-      <div>
+      {/* <div>
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" className="rounded-full bg-primary-400">
             {' '}
@@ -89,7 +89,7 @@ const Navbar = () => {
           isOpen={isExpenseModalOpen}
           handleClose={handleModalClose}
         ></AddExpenseModal>
-      </div>
+      </div> */}
     </>
   );
 };
