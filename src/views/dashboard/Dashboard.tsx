@@ -2,7 +2,9 @@ import AddExpenseModal from '../../components/modals/AddExpenseModal';
 const Dashboard = () => {
   return (
     <>
-      <div className="mt-5 h-64 bg-primary-100">Test</div>
+      <div className="flex justify-center mt-5 h-full bg-primary-100 text-6xl text-medium">
+        <span className=''>SHOW A NINJA SOME LOVE!</span>
+      </div>
     </>
   );
 };

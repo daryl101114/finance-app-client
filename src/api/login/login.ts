@@ -16,7 +16,7 @@ export const registerUser = async (user: IUser): Promise<AxiosResponse> => {
 export const loginUser = async (user: ILoginUser): Promise<AxiosResponse> => {
   try {
     const res: AxiosResponse = await axios.post(
-      'http://localhost:4000/api/loginUser',
+      'https://localhost:7126/api/Authentication/authenticate',
       user,
     );
     return JSON.parse(JSON.stringify(res));

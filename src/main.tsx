@@ -7,7 +7,7 @@ import ErrorPage from './views/error-page/ErrorPage.tsx';
 import Register from './views/register-page/Register.tsx';
 import Dashboard from './views/dashboard/Dashboard.tsx';
 import { Provider } from 'react-redux';
-import store from './store/store';
+// import store from './store/store';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
 import { AuthProvider } from './hooks/useAuth';
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: 'dashboard',
+        path: '',
         element: <Dashboard />,
       },
     ],
@@ -80,7 +80,7 @@ axios.interceptors.request.use(function (config) {
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <Provider store={store}>
+  // <Provider store={store}>
     <AuthProvider>
       <React.StrictMode>
         {/* <StyledEngineProvider injectFirst>
@@ -90,5 +90,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </StyledEngineProvider> */}
       </React.StrictMode>
     </AuthProvider>
-  </Provider>,
+  // </Provider>,
 );

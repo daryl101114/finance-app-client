@@ -9,9 +9,9 @@ const meta = {
     variant: {
       control: { type: 'select' },
       options: [
-        'default',
-        'secondary',
-        'destructive',
+        'email',
+        'password',
+        'text',
         'ghost',
         'link',
         'outline',

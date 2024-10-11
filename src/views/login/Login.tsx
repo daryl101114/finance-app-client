@@ -4,11 +4,11 @@ import { ILoginUser } from '../../configs/types/User';
 import { loginUser } from '../../api/login/login';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-// import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Login: React.FC = () => {
-  const [username, setUserName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
@@ -18,9 +18,9 @@ const Login: React.FC = () => {
     console.log(isAuthenticated, 'AUTH');
   }, []);
 
-  const handleRegister = async () => {
+  const handleLogin = async () => {
     const userObj: ILoginUser = {
-      username: username,
+      email: email,
       password: password,
     };
     const res = await loginUser(userObj);
@@ -28,8 +28,9 @@ const Login: React.FC = () => {
       clearInputFields();
       return;
     }
-    axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-    localStorage.setItem('token', JSON.stringify(res.data.token));
+
+    axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.value}`;
+    localStorage.setItem('token', JSON.stringify(res.data.value));
     localStorage.setItem('isAuthorized', 'true');
 
     // setting time of when 10 minute session should expire & storing in localStorage
@@ -49,42 +50,45 @@ const Login: React.FC = () => {
   };
 
   const handleRedirect = (text: string): void => {
+    console.log('hit', text)
     navigate(text);
   };
   /**
    * Clear Input Fields
    */
   const clearInputFields = () => {
-    setUserName('');
+    setEmail('');
     setPassword('');
   };
   return (
     <>
     <div className='grid grid-cols-2'>
-        <div className="bg-neutral-100">
-          <div className='h-lvh p-5 flex flex-col justify-center items-center'>
-            <div className='text-2xl text-primary-900 font-medium w-full '>Budgify</div>
+        <div className="bg-primary-300">
+          <div className='h-lvh p-5 flex flex-col justify-center items-center gap-12'>
+            <div className='text-2xl text-primary-foreground font-medium '>Budgify</div>
             <img
               className="h-auto w-full"
               src="../../../public/money-investment.svg"
               alt="Money Invest"
             />
-          <div className='text-lg text-primary-900 font-medium'>"You're friendly neighborhood Budgetting App"</div>
+          <div className='text-xl text-primary-foreground font-medium'>"You're friendly neighborhood Budgetting App"</div>
           </div>
         
         </div>
-        <div className="flex h-lvh flex-col items-center justify-center gap-2 ">
-              <span className="font-medium text-4xl text-primary-900">Login</span>
+        <div className="flex h-lvh flex-col items-center justify-center gap-3 ">
+              <span className="font-medium text-4xl text-primary">Login</span>
               <span className="text-lg font-medium text-neutral-600">
                 Continue your financial journey!
               </span>
-              {/* <div className='w-full'>
-              <Input type="email" placeholder="Email" />
-              </div> */}
+              <div className='w-72'>
+              < Input type="email" placeholder="Email" onChange={(e)=> setEmail(e.target.value)} />
+              </div>
+              <div className='w-72'>
+              < Input type="password" placeholder="Password" onChange={(e)=> setPassword(e.target.value)} />
+              </div>
                 <Button
-              onClick={handleRegister}
-              variant="link"
-            >
+                  onClick={handleLogin}
+                >
               Login User
             </Button>
               <form onSubmit={()=>{}}>

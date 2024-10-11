@@ -38,6 +38,9 @@ const Navbar = () => {
   };
   return (
     <>
+    <div className='text-4xl text-primary-foreground flex justify-center item-center w-full'>
+      Navigation Bar
+    </div>
       {/* <div>
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" className="rounded-full bg-primary-400">
