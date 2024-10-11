@@ -1,12 +1,12 @@
 import React, { FC, useState, ChangeEvent, useEffect } from 'react';
-import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@mui/material';
+// import {
+//   Button,
+//   TextField,
+//   Dialog,
+//   DialogActions,
+//   DialogContent,
+//   DialogTitle,
+// } from '@mui/material';
 import { addExpense } from '../../api/expense';
 
 interface IAddExpenseModalProps {
@@ -45,7 +45,7 @@ const AddExpenseModal = ({
 
   return (
     <>
-      <Dialog
+      {/* <Dialog
         open={open}
         onClose={handleClose}
         PaperProps={{
@@ -59,7 +59,6 @@ const AddExpenseModal = ({
       >
         <DialogTitle>Add Expense</DialogTitle>
         <DialogContent className="flex flex-col gap-5">
-          {/* <DialogContentText>Add Expense</DialogContentText> */}
           <TextField
             className="w-64"
             autoFocus
@@ -117,7 +116,7 @@ const AddExpenseModal = ({
           <Button onClick={handleClose}>Cancel</Button>
           <Button type="submit">Add Expense</Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 };

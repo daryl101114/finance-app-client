@@ -17,7 +17,7 @@ import { AuthProvider } from './hooks/useAuth';
 //   createTheme,
 // } from '@mui/material/styles';
 import axios from 'axios';
-import { getItem } from './lib/utils.ts';
+import { getItem } from '@/lib/utils.ts';
 const rootElement = document.getElementById('root');
 
 // const theme = createTheme({

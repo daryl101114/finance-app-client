@@ -4,7 +4,7 @@ import { ILoginUser } from '../../configs/types/User';
 import { loginUser } from '../../api/login/login';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Login: React.FC = () => {
@@ -81,13 +81,19 @@ const Login: React.FC = () => {
               {/* <div className='w-full'>
               <Input type="email" placeholder="Email" />
               </div> */}
+                <Button
+              onClick={handleRegister}
+              variant="link"
+            >
+              Login User
+            </Button>
               <form onSubmit={()=>{}}>
         <div className="grid gap-2">
           <div className="grid gap-1 w-80">
             {/* <Label className="sr-only" htmlFor="email">
               Email
             </Label> */}
-            <Input
+            {/* <Input
               id="email"
               placeholder="Email"
               type="email"
@@ -95,7 +101,7 @@ const Login: React.FC = () => {
               autoComplete="email"
               autoCorrect="off"
               disabled={false}
-            />
+            /> */}
           </div>
           {/* <Button disabled={false}>
             {isLoading && (
