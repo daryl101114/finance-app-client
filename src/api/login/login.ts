@@ -22,6 +22,7 @@ export const loginUser = async (user: ILoginUser): Promise<AxiosResponse> => {
     return JSON.parse(JSON.stringify(res));
   } catch (err: any) {
     console.error('@LoginUser: ', err);
+    localStorage.clear();
     throw new Error('Login Failed');
   }
 };

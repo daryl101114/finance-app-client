@@ -6,14 +6,18 @@ interface PrivateRoutesProps {
 }
 
 const PrivateRoutes = ({ children }: PrivateRoutesProps): JSX.Element => {
-  const { isAuthenticated } = useAuth();
+  const { token } = useAuth();
   const location = useLocation();
-  if (!isAuthenticated) {
+  // authenticate();
+  if (!token) {
     // Redirect to login page, preserving the location state
+    localStorage.clear()
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return children;
+  return (<>
+  {children}
+  </>);
 };
 
 export default PrivateRoutes;
