@@ -175,6 +175,9 @@ export default {
 		    './index.html',  // Include Storybook files as well
 		  ],
   theme: {
+	container: {
+		center: true,
+	},
   	colors: {
   		transparent: 'transparent',
   		background: '#BCCCDC',

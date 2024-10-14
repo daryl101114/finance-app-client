@@ -78,12 +78,15 @@ const Login: React.FC = () => {
     <div className='grid grid-cols-2'>
         <div className="bg-primary-300">
           <div className='h-lvh p-5 flex flex-col justify-center items-center gap-12'>
-            <div className='text-5xl text-primary-foreground font-medium '>Budgify</div>
+            <div className='text-5xl text-primary-foreground font-medium flex justify-center items-end'> 
+              <img className="w-11 h-11 mr-2" src="../../public/5.svg" /> Budgetman
+            </div>
             <img
               className="h-auto w-full"
               src="../../../public/money-investment.svg"
               alt="Money Invest"
             />
+           
           <div className='text-4xl text-primary-foreground font-medium'>"You're friendly neighborhood Budgetting App"</div>
           </div>
         

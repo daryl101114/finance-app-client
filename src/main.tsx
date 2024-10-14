@@ -6,7 +6,7 @@ import App from './App.tsx';
 import ErrorPage from './views/error-page/ErrorPage.tsx';
 import Register from './views/register-page/Register.tsx';
 import Dashboard from './views/dashboard/Dashboard.tsx';
-import { Provider } from 'react-redux';
+import Wallet from '@/views/wallet/Wallet.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
 import { AuthProvider } from './hooks/useAuth';
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'Wallets',
-        element: <div className='text-5xl p-5 font-semibold text-primary'>Wallets</div>,
+        element: <Wallet />,
       },
       {
         path: 'Budgets',

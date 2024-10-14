@@ -21,14 +21,10 @@ export function Sidebar({ children }: SidebarProps) {
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
             <span className="flex">
-            <img
-            src="https://img.logoipsum.com/245.svg"
-            className={`overflow-hidden transition-all ${
-              expanded ? "w-15" : "w-5"
-            }`}
-            alt=""
-            onClick={()=>{navigate("/")}}
-          />
+            <img className={`overflow-hidden transition-all ${
+              expanded ? "w-7" : "w-7"
+            }`} src="../../public/5.svg" />
+            
           <span className={`text-3xl font-medium text-primary overflow-hidden transition-all ${expanded ? "w-15" : "w-0"}`}>Budgify</span>
             </span>
           
