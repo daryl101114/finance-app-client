@@ -7,15 +7,12 @@ const meta = {
   component: Input,
   tags: ['autodocs'],
   argTypes: {
-    placeholder:{control:'text'},
-    disabled:{control:'boolean'},
-    type: {control: { type: 'select' },
-    options: [
-      'email',
-      'text',
-      'password',
-      'file'
-    ],},
+    placeholder: { control: 'text' },
+    disabled: { control: 'boolean' },
+    type: {
+      control: { type: 'select' },
+      options: ['email', 'text', 'password', 'file'],
+    },
   },
   parameters: {
     layout: 'centered',

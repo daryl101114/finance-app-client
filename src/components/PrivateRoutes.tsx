@@ -11,13 +11,11 @@ const PrivateRoutes = ({ children }: PrivateRoutesProps): JSX.Element => {
   // authenticate();
   if (!token) {
     // Redirect to login page, preserving the location state
-    localStorage.clear()
+    localStorage.clear();
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return (<>
-  {children}
-  </>);
+  return <>{children}</>;
 };
 
 export default PrivateRoutes;

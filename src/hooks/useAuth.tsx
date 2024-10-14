@@ -1,4 +1,11 @@
-import { createContext, useContext, useMemo, ReactNode, useState, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useMemo,
+  ReactNode,
+  useState,
+  useEffect,
+} from 'react';
 import { getItem } from '../lib/utils';
 
 interface AuthContextType {
@@ -16,29 +23,27 @@ interface AuthorizedType {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [token, setToken] = useState(
-    getItem<AuthorizedType>('token'),
-  );
+  const [token, setToken] = useState(getItem<AuthorizedType>('token'));
 
-  useEffect(()=>{
+  useEffect(() => {
     //Authentication logic here
     //TODO: Maybe ADD Retrieve new token
     const tokenDateString = localStorage.getItem('accessTokenExpiryTime');
     //Validate if date exist
-    if(token && tokenDateString){
+    if (token && tokenDateString) {
       const currDate = new Date();
       const expiryDate = new Date(tokenDateString);
-      if(currDate >=  expiryDate){
-        console.log("GET NEW TOKEN")
+      if (currDate >= expiryDate) {
+        console.log('GET NEW TOKEN');
         logout();
       }
-    }else{
-      logout()
+    } else {
+      logout();
     }
     authenticate();
-  },[token])
+  }, [token]);
   const authenticate = () => {
-    console.log('Authenticating')
+    console.log('Authenticating');
     try {
       const authenticated = getItem<AuthorizedType>('token');
       setToken(authenticated);
@@ -58,7 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }),
     [token],
   );
-  return (<AuthContext.Provider value={value}>{children}</AuthContext.Provider>);
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

@@ -12,6 +12,7 @@ import PrivateRoutes from './components/PrivateRoutes.tsx';
 import { AuthProvider } from './hooks/useAuth';
 import axios from 'axios';
 import { getItem } from '@/lib/utils.ts';
+import data from '@emoji-mart/data';
 
 // Routes
 const router = createBrowserRouter([
@@ -37,8 +38,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path:'',
-        element: <Dashboard />
+        path: '',
+        element: <Dashboard />,
       },
       {
         path: 'Wallets',
@@ -46,11 +47,15 @@ const router = createBrowserRouter([
       },
       {
         path: 'Budgets',
-        element: <div className='text-5xl p-5 font-semibold text-primary'>Budgets</div>,
+        element: (
+          <div className="p-5 text-5xl font-semibold text-primary">Budgets</div>
+        ),
       },
       {
         path: 'Expense',
-        element: <div className='text-5xl p-5 font-semibold text-primary'>Expense</div>,
+        element: (
+          <div className="p-5 text-5xl font-semibold text-primary">Expense</div>
+        ),
       },
     ],
   },
@@ -65,9 +70,9 @@ axios.interceptors.request.use(function (config) {
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <AuthProvider>
-      <React.StrictMode>
-        <RouterProvider router={router} />
-      </React.StrictMode>
-    </AuthProvider>
+  <AuthProvider>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </AuthProvider>,
 );

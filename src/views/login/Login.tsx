@@ -4,9 +4,9 @@ import { ILoginUser } from '../../configs/types/User';
 import { loginUser } from '../../api/login/login';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { jwtDecode } from "jwt-decode";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { jwtDecode } from 'jwt-decode';
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -19,10 +19,10 @@ const Login: React.FC = () => {
 
   // }, []);
   interface DecodedTokenType {
-    exp?:number|undefined,
-    "given_name": string,
-    "family_name": string,
-    email: string
+    exp?: number | undefined;
+    given_name: string;
+    family_name: string;
+    email: string;
   }
   const handleLogin = async () => {
     const userObj: ILoginUser = {
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
     };
     const res = await loginUser(userObj);
     if (res.status !== 200) {
-      console.log("UNAUTHORIZED")
+      console.log('UNAUTHORIZED');
       clearInputFields();
       localStorage.clear();
       return;
@@ -42,20 +42,18 @@ const Login: React.FC = () => {
     // localStorage.setItem('isAuthorized', 'true');
 
     // setting time of when 10 minute session should expire & storing in localStorage
-    const decoded:DecodedTokenType = jwtDecode(res.data.value)
-    console.log(decoded)
-    const exp = decoded.exp||0
-    const accessTokenExpiryTime = new Date(
-      exp * 1000
-    ).toString();
+    const decoded: DecodedTokenType = jwtDecode(res.data.value);
+    console.log(decoded);
+    const exp = decoded.exp || 0;
+    const accessTokenExpiryTime = new Date(exp * 1000).toString();
 
+    localStorage.setItem('accessTokenExpiryTime', accessTokenExpiryTime);
     localStorage.setItem(
-      'accessTokenExpiryTime',
-      accessTokenExpiryTime,
+      'fullName',
+      `${decoded['given_name']} ${decoded['family_name']}`,
     );
-    localStorage.setItem('fullName',`${decoded['given_name']} ${decoded['family_name']}`)
 
-    localStorage.setItem('email',email)
+    localStorage.setItem('email', email);
 
     authenticate();
     handleRedirect('/');
@@ -63,7 +61,7 @@ const Login: React.FC = () => {
   };
 
   const handleRedirect = (text: string): void => {
-    console.log('hit', text)
+    console.log('hit', text);
     navigate(text);
   };
   /**
@@ -75,41 +73,51 @@ const Login: React.FC = () => {
   };
   return (
     <>
-    <div className='grid grid-cols-2'>
+      <div className="grid grid-cols-2">
         <div className="bg-primary-300">
-          <div className='h-lvh p-5 flex flex-col justify-center items-center gap-12'>
-            <div className='text-5xl text-primary-foreground font-medium flex justify-center items-end'> 
-              <img className="w-11 h-11 mr-2" src="../../public/5.svg" /> Budgetman
+          <div className="flex h-lvh flex-col items-center justify-center gap-12 p-5">
+            <div className="flex items-end justify-center text-5xl font-medium text-primary-foreground">
+              <img className="mr-2 h-11 w-11" src="../../public/5.svg" />{' '}
+              Budgetman
             </div>
             <img
               className="h-auto w-full"
               src="../../../public/money-investment.svg"
               alt="Money Invest"
             />
-           
-          <div className='text-4xl text-primary-foreground font-medium'>"You're friendly neighborhood Budgetting App"</div>
+
+            <div className="text-4xl font-medium text-primary-foreground">
+              "You're friendly neighborhood Budgetting App"
+            </div>
           </div>
-        
         </div>
-        <div className="flex h-lvh flex-col items-center justify-center gap-3 ">
-              <span className="font-medium text-6xl text-primary">Login</span>
-              <span className="text-xl font-medium text-neutral-600">
-                Continue your financial journey!
-              </span>
-              <div className='w-72'>
-              < Input type="email" placeholder="Email" onChange={(e)=> setEmail(e.target.value)} />
-              </div>
-              <div className='w-72'>
-              < Input type="password" placeholder="Password" onChange={(e)=> setPassword(e.target.value)} />
-              </div>
-                <Button
-                  className='text-xl transition-all ease-in-out delay-50 bg-primary hover:-translate-y-1 hover:scale-110 duration-300 hover:bg-cyan-500'
-                  onClick={handleLogin}
-                >
-              Login User
-            </Button>
+        <div className="flex h-lvh flex-col items-center justify-center gap-3">
+          <span className="text-6xl font-medium text-primary">Login</span>
+          <span className="text-xl font-medium text-neutral-600">
+            Continue your financial journey!
+          </span>
+          <div className="w-72">
+            <Input
+              type="email"
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="w-72">
+            <Input
+              type="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <Button
+            className="delay-50 bg-primary text-xl transition-all duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-cyan-500"
+            onClick={handleLogin}
+          >
+            Login User
+          </Button>
         </div>
-    </div>
+      </div>
     </>
   );
 };
