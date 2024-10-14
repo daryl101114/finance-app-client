@@ -29,18 +29,6 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
-			  primary: {
-				'50': '#DCEEFB',
-				'100': '#B6E0FE',
-				'200': '#84C5F4',
-				'300': '#62B0E8',
-				'400': '#4098D7',
-				'500': '#2680C2',
-				'600': '#186FAF',
-				'700': '#0F609B',
-				'800': '#0A558C',
-				'900': '#003E6B'
-			},
 			neutral: {
 				'50': '#F0F4F8',
 				'100': '#D9E2EC',
@@ -99,7 +87,17 @@ export default {
   			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				foreground: 'hsl(var(--primary-foreground))',
+				'50': '#DCEEFB',
+				'100': '#B6E0FE',
+				'200': '#84C5F4',
+				'300': '#62B0E8',
+				'400': '#4098D7',
+				'500': '#2680C2',
+				'600': '#186FAF',
+				'700': '#0F609B',
+				'800': '#0A558C',
+				'900': '#003E6B'
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',

@@ -22,7 +22,6 @@ const EmojiPicker = ({
     console.log(selectedEmoji);
     setValueToParentCompnent(emoji.id);
   };
-
   return (
     <>
       <div>

@@ -109,7 +109,7 @@ const AddWalletModal = () => {
             <DialogTitle className="mb-8">Create a New Wallet</DialogTitle>
             <div className="flex w-full justify-center">
               <EmojiPicker setValueToParentCompnent={setWalletEmoji}>
-                <div className="mt-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary-400">
+                <div className="mt-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary-300">
                   <em-emoji id={pickedEmoji} size="2rem"></em-emoji>
                 </div>
               </EmojiPicker>
