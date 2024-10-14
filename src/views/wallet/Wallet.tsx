@@ -5,22 +5,8 @@ import AddWalletModal from './AddWalletModal';
 
 const Wallet = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-
-  // const openModal = () => {
-  //     setModalOpen(!isModalOpen);
-  //     console.log(isModalOpen)
-  // }
   return (
     <>
-      {/* <main className="mx-auto flex flex-wrap justify-center items-center text-5xl font-medium text-neutral-500 w-9/12 h-full bg-neutral-50 ">
-        <Card className="w-full h-64">
-            Test
-        </Card>
-        <Card className="w-full h-96">
-            Test
-        </Card>
-
-</main> */}
       <div className="grid h-full grid-flow-col grid-rows-4 gap-4 p-4">
         <Card className="w-90 row-span-4 p-4">
           <CardHeader className="border-b-2">
