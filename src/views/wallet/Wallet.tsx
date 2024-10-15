@@ -50,7 +50,7 @@ const Wallet = () => {
                 return (
                   <div
                     key={item.id}
-                    className="flex items-end gap-1 rounded-md p-1 hover:bg-primary-50 hover:-translate-y-1 transition ease-in-out"
+                    className="flex items-end gap-1 rounded-md p-1 hover:bg-primary-50 hover:-translate-y-1 transition ease-in-out hover:cursor-pointer"
                   >
                     <em-emoji
                       className="h-12 w-12 rounded-full"
