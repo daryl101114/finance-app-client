@@ -10,4 +10,8 @@ const addWallet = async (wallet: IWalletCreationType) => {
   }
 };
 
-export { addWallet };
+const getUserWallets = async (): Promise<AxiosResponse> => {
+  return await axios.get('https://localhost:7126/api/wallet');
+};
+
+export { addWallet, getUserWallets };

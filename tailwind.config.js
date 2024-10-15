@@ -16,9 +16,9 @@ export default {
   	colors: {
   		transparent: 'transparent',
   		background: '#BCCCDC',
-  		
-		  indigo: colors.indigo,
-		  emerald: colors.emerald,
+		green:colors.green,
+		indigo: colors.indigo,
+		emerald: colors.emerald,
   	},
   	extend: {
   		borderRadius: {

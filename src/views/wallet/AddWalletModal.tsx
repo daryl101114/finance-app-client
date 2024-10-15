@@ -18,24 +18,30 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { CirclePlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { addWallet } from '@/api/wallet';
-import { useEffect } from 'react';
 import { IWalletCreationType } from '@/configs/types/Wallet';
-import EmojiPicker from '@/components/ui/emojiPicker';
 import { init } from 'emoji-mart';
 import data from '@emoji-mart/data';
-
+import { AccountTypes, WalletIcons } from '@/lib/constants/AccountTypes';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 init({ data });
 
-//Form Definition
+
 const twoDecimalPlacesRegex = /^\d+(\.\d{1,2})?$/;
+//Form Definition
 const formSchema = z.object({
   walletName: z.string().min(2).max(50),
-  walletType: z.string().min(2).max(50),
+  walletType: z.string().min(1, {message:"Must select wallet type"}).max(50),
   balance: z
     .string() // Accepts string input first (since form inputs are strings)
     .max(19, { message: 'Value is to large to be a valid currency' })
@@ -45,15 +51,10 @@ const formSchema = z.object({
     .transform((value) => parseFloat(value)), // Transforms to a number after validation,
   currency: z.string(),
 });
-interface formType {
-  walletName: string;
-  walletType: string;
-  balance: number;
-  currency: string;
-}
+
 const AddWalletModal = () => {
   const [open, setOpen] = useState(false);
-  const [pickedEmoji, setPickedEmoji] = useState('bank');
+  // const [pickedEmoji, setPickedEmoji] = useState('bank');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,30 +66,22 @@ const AddWalletModal = () => {
   });
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
 
-    console.log(values);
+    //Map form values to IWalletCreationType
     const wallet: IWalletCreationType = {
       accountName: values.walletName,
-      accountType: values.walletType,
+      walletTypeId: AccountTypes[values.walletType],
       balance: values.balance,
       currency: 'USD',
-      emoji: pickedEmoji,
+      emoji: WalletIcons[values.walletType],
     };
+
+    //Add Wwallet
     await addWallet(wallet);
     form.reset();
     setOpen(false);
   }
 
-  // This will run whenever childData is updated
-  useEffect(() => {
-    if (pickedEmoji !== '') {
-      console.log('childData is updated:', pickedEmoji);
-    }
-  }, [pickedEmoji]);
-  const setWalletEmoji = (data: string) => {
-    setPickedEmoji(data);
-  };
   return (
     <>
       <Dialog
@@ -98,22 +91,18 @@ const AddWalletModal = () => {
           return setOpen(!open);
         }}
       >
-        <DialogTrigger className="border-transparent">
-          <span className="flex items-center gap-1 text-primary">
-            <CirclePlusIcon className="h-4 w-4" />
-            Add Wallet
-          </span>
+        <DialogTrigger asChild>
+          <Button
+            className="transition ease-in-out delay-100 h-12 w-12 rounded-full p-2 hover:scale-110"
+            variant="default"
+            size="icon"
+          >
+            <PlusIcon className="h-10 w-10" />
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="mb-8">Create a New Wallet</DialogTitle>
-            <div className="flex w-full justify-center">
-              <EmojiPicker setValueToParentCompnent={setWalletEmoji}>
-                <div className="mt-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary-300">
-                  <em-emoji id={pickedEmoji} size="2rem"></em-emoji>
-                </div>
-              </EmojiPicker>
-            </div>
             <DialogDescription></DialogDescription>
             <Form {...form}>
               <form
@@ -126,7 +115,6 @@ const AddWalletModal = () => {
                   render={({ field }) => (
                     <FormItem className="flex flex-col gap-4 px-24">
                       <div className="flex flex-col gap-1">
-                        <FormLabel>Wallet Name</FormLabel>
                         <FormControl>
                           <Input placeholder="shadcn" {...field} />
                         </FormControl>
@@ -139,13 +127,31 @@ const AddWalletModal = () => {
                   control={form.control}
                   name="walletType"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col gap-4 px-24">
-                      <div className="flex flex-col gap-1">
-                        <FormLabel>Type</FormLabel>
+                    <FormItem className="flex flex-col px-24">
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
-                          <Input placeholder="shadcn" {...field} />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a Type of Wallet" />
+                          </SelectTrigger>
                         </FormControl>
-                      </div>
+                        <SelectContent>
+                          <SelectItem value={'Cash Account'}>
+                          <em-emoji  id="dollar" size="1rem" /> Cash Account
+                          </SelectItem>
+                          <SelectItem value={'Savings Account'}>
+                          <em-emoji id="moneybag" size="1rem" />  Savings Account
+                          </SelectItem>
+                          <SelectItem value={'Debt Account'}>
+                          <em-emoji  id="credit_card" size="1rem" />  Debt Account
+                          </SelectItem>
+                          <SelectItem value={'Asset Account'}>
+                          <em-emoji id="gem" size="1rem" />  Asset Account
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}

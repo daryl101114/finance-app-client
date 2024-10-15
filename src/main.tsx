@@ -14,6 +14,16 @@ import axios from 'axios';
 import { getItem } from '@/lib/utils.ts';
 import data from '@emoji-mart/data';
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'em-emoji': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
+      > & { id: string; size: string };
+    }
+  }
+}
 // Routes
 const router = createBrowserRouter([
   {
