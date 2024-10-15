@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import {
-  MenuItem,
-  AppBar,
-  Box,
-  Toolbar,
-  Typography,
-  Button,
-} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import AddExpenseModal from '../../components/modals/AddExpenseModal';
+import { Sidebar, SidebarItem } from '@/components/ui/sidebar';
+import {
+  WalletMinimalIcon,
+  HandCoinsIcon,
+  ReceiptTextIcon,
+} from 'lucide-react';
+import Icon from '@/components/ui/icon';
+import { ColorWheelIcon } from '@radix-ui/react-icons';
+import EmojiPicker from '@/components/ui/emojiPicker';
 
 const Navbar = () => {
   const [isExpenseModalOpen, setExpenseModalOpen] = useState(false);
@@ -38,58 +38,26 @@ const Navbar = () => {
   };
   return (
     <>
-      <div>
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" className="rounded-full bg-primary-400">
-            {' '}
-            <Toolbar className="flex flex-wrap justify-between">
-              <div className="flex flex-wrap">
-                <MenuItem
-                  onClick={() => navigateTo('')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="">
-                    FinTracker
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => navigateTo('dashboard')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="">
-                    Expenses
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => navigateTo('other-features')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="">
-                    Other
-                  </Typography>
-                </MenuItem>
-              </div>
-              <div className="flex">
-                <Button
-                  color="inherit"
-                  onClick={() => {
-                    setExpenseModalOpen(true);
-                  }}
-                >
-                  + Expense
-                </Button>
-                <Button color="inherit" onClick={handleLogout}>
-                  logout
-                </Button>
-              </div>
-            </Toolbar>
-          </AppBar>
-        </Box>
-        <AddExpenseModal
-          isOpen={isExpenseModalOpen}
-          handleClose={handleModalClose}
-        ></AddExpenseModal>
-      </div>
+      <Sidebar>
+        <SidebarItem
+          icon={<WalletMinimalIcon />}
+          text="WALLETS"
+          active={true}
+          navigateTo="/Wallets"
+        ></SidebarItem>
+        <SidebarItem
+          icon={<HandCoinsIcon />}
+          text="BUDGETS"
+          active={false}
+          navigateTo="/Budgets"
+        ></SidebarItem>
+        <SidebarItem
+          icon={<ReceiptTextIcon />}
+          text="EXPENSES"
+          active={false}
+          navigateTo="/Expense"
+        ></SidebarItem>
+      </Sidebar>
     </>
   );
 };

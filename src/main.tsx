@@ -6,40 +6,24 @@ import App from './App.tsx';
 import ErrorPage from './views/error-page/ErrorPage.tsx';
 import Register from './views/register-page/Register.tsx';
 import Dashboard from './views/dashboard/Dashboard.tsx';
-import { Provider } from 'react-redux';
-import store from './store/store';
+import Wallet from '@/views/wallet/Wallet.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
 import { AuthProvider } from './hooks/useAuth';
-import {
-  ThemeProvider,
-  StyledEngineProvider,
-  createTheme,
-} from '@mui/material/styles';
 import axios from 'axios';
-import { getItem } from './lib/utils.ts';
-const rootElement = document.getElementById('root');
+import { getItem } from '@/lib/utils.ts';
+import data from '@emoji-mart/data';
 
-const theme = createTheme({
-  components: {
-    MuiPopover: {
-      defaultProps: {
-        container: rootElement,
-      },
-    },
-    MuiPopper: {
-      defaultProps: {
-        container: rootElement,
-      },
-    },
-    MuiDialog: {
-      defaultProps: {
-        container: rootElement,
-      },
-    },
-  },
-});
-
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'em-emoji': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
+      > & { id: string; size: string };
+    }
+  }
+}
 // Routes
 const router = createBrowserRouter([
   {
@@ -64,8 +48,24 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: 'dashboard',
+        path: '',
         element: <Dashboard />,
+      },
+      {
+        path: 'Wallets',
+        element: <Wallet />,
+      },
+      {
+        path: 'Budgets',
+        element: (
+          <div className="p-5 text-5xl font-semibold text-primary">Budgets</div>
+        ),
+      },
+      {
+        path: 'Expense',
+        element: (
+          <div className="p-5 text-5xl font-semibold text-primary">Expense</div>
+        ),
       },
     ],
   },
@@ -80,15 +80,9 @@ axios.interceptors.request.use(function (config) {
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <Provider store={store}>
-    <AuthProvider>
-      <React.StrictMode>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </React.StrictMode>
-    </AuthProvider>
-  </Provider>,
+  <AuthProvider>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </AuthProvider>,
 );
