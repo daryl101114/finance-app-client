@@ -1,7 +1,7 @@
 import { MoreVertical, ChevronLast, ChevronFirst } from 'lucide-react';
 import { useContext, createContext, useState, ReactNode } from 'react';
 import { UserRound } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 interface SidebarContextProps {
   expanded: boolean;
 }
@@ -15,7 +15,6 @@ export function Sidebar({ children }: SidebarProps) {
   const [expanded, setExpanded] = useState(true);
   const userName = localStorage.getItem('fullName');
   const email = localStorage.getItem('email') || '';
-  const navigate = useNavigate();
   return (
     <aside className="h-screen">
       <nav className="bg-white flex h-full flex-col border-r shadow-sm">
@@ -80,18 +79,14 @@ export function SidebarItem({
   navigateTo,
 }: SidebarItemProps) {
   const expanded = useContext(SidebarContext);
-  const navigate = useNavigate();
-  console.log(icon, text, active, alert, expanded);
   return (
-    <li
+    <Link
       className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium font-semibold transition-colors ${
         active
           ? 'bg-gradient-to-tr from-primary to-primary-300 text-primary-50'
           : 'text-neutral-700 hover:bg-primary-50'
       } `}
-      onClick={() => {
-        navigate(navigateTo);
-      }}
+      to={navigateTo}
     >
       <div className="items-center">{icon}</div>
       <span
@@ -116,6 +111,6 @@ export function SidebarItem({
           {text}
         </div>
       )}
-    </li>
+    </Link>
   );
 }

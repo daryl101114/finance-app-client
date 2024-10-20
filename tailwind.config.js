@@ -19,6 +19,7 @@ export default {
 		green:colors.green,
 		indigo: colors.indigo,
 		emerald: colors.emerald,
+		black: colors.black
   	},
   	extend: {
   		borderRadius: {

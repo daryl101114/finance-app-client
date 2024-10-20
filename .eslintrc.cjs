@@ -1,3 +1,5 @@
+import pluginQuery from '@tanstack/eslint-plugin-query'
+
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -15,6 +17,7 @@ module.exports = {
     project: "./tsconfig.json",
     tsconfigRootDir: "./",
   },
+  ...pluginQuery.configs['flat/recommended'],
   plugins: ["react-refresh", "import"],
   rules: {
     "react-refresh/only-export-components": [

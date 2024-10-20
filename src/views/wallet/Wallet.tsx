@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -12,52 +10,59 @@ import { IWalletType } from '@/configs/types/Wallet';
 import { init } from 'emoji-mart';
 import data from '@emoji-mart/data';
 import { Button } from '@/components/ui/button';
-import { EllipsisVerticalIcon, LoaderCircleIcon } from 'lucide-react';
-
-
+import { EllipsisVerticalIcon } from 'lucide-react';
+import { useQuery, QueryClient, useMutation } from '@tanstack/react-query';
+import { LoaderFunctionArgs, Outlet } from 'react-router-dom';
+import { createContext } from 'react';
 init({ data });
-const Wallet = () => {
-  const [userWallets, setUserWallets] = useState<IWalletType[]>([]);
-  const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setLoading(true)
-    const getWallets = getUserWallets;
-    getWallets().then((res) => {
-      setUserWallets(res.data.wallets);
-      setLoading(false);
-    }).finally(()=>{
-      setLoading(false);
-    })
-    
-  }, []);
+const userWalletsQuery = () => ({
+  queryKey: ['userWallets'],
+  queryFn: async () => getUserWallets(),
+});
+
+const loader =
+  (queryClient: QueryClient) =>
+  async ({ request }: LoaderFunctionArgs) => {
+    console.log(request);
+    await queryClient.ensureQueryData(userWalletsQuery());
+
+    const url = new URL(request.url);
+    return url;
+  };
+
+export const WalletsContext = createContext<IWalletType[] | undefined>(
+  undefined,
+);
+
+const Wallet = () => {
+  const { data: wallets } = useQuery({
+    ...userWalletsQuery(),
+  });
 
   return (
     <>
-      <div className="grid h-full grid-flow-col grid-rows-4 gap-4 p-4">
-        <Card className="min-w-[31rem] row-span-4 flex flex-col p-4">
+      <div className="grid h-full grid-cols-3 grid-rows-3 gap-4 p-4">
+        <Card className="col-span-1 row-span-3 flex flex-col p-4">
           <CardHeader className="border-b-2">
             <div className="flex items-end justify-between">
-              <span className="text-4xl text-neutral-800">Wallets</span>
+              <span className="text-4xl text-primary-900">Wallets</span>
             </div>
-          </CardHeader> 
+          </CardHeader>
           <CardContent className="grow">
-         {isLoading ? <div className='flex justify-center items-center text-2xl text-neutral-700 h-full'> <LoaderCircleIcon className='animate-spin h-5 w-5 mr-3 text-xl' />
-          Loading Wallets...</div> : ''}
             <div className="mt-4 transition ease-in-out">
-              {/* <ul className="mt-5 flex flex-col gap-3"> */}
-              {userWallets.map((item: IWalletType) => {
+              {wallets?.map((item: IWalletType) => {
                 return (
                   <div
                     key={item.id}
-                    className="flex items-end gap-1 rounded-md p-1 hover:bg-primary-50 hover:-translate-y-1 transition ease-in-out hover:cursor-pointer"
+                    className="flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
                   >
                     <em-emoji
                       className="h-12 w-12 rounded-full"
                       id={item.emoji}
                       size="2rem"
                     ></em-emoji>
-                    <div className="grow text-3xl text-neutral-700">
+                    <div className="grow text-xl text-black">
                       {item.accountName}
                     </div>
                     <Button variant="ghost" size="icon">
@@ -66,14 +71,13 @@ const Wallet = () => {
                   </div>
                 );
               })}
-              {/* </ul> */}
             </div>
           </CardContent>
           <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
             <AddWalletModal />
           </CardFooter>
         </Card>
-        <Card className="align-center col-span-4 row-span-2 bg-neutral-50 p-4">
+        <Card className="align-center col-span-2 row-span-1 bg-neutral-50 p-4">
           <CardHeader className=" ">
             <span className="flex w-full justify-center text-4xl text-neutral-800">
               Balance
@@ -81,20 +85,16 @@ const Wallet = () => {
           </CardHeader>
           <CardContent>Under Maintenance</CardContent>
         </Card>
-        <Card className="align-center bg-neutral-0 col-span-4 row-span-2 flex flex-col p-4">
-          <CardHeader>
-            <span className="flex justify-center text-4xl text-neutral-800">
-              Transactions
-            </span>
-          </CardHeader>
-          <CardContent className="grow"></CardContent>
-          <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
-            <AddWalletModal />
-          </CardFooter>
-        </Card>
+        {/* Add an Outlet */}
+        {/* <ThemeContext.Provider value="dark"></ThemeContext.Provider> */}
+        <WalletsContext.Provider value={wallets}>
+          <Card className="align-center bg-neutral-0 col-span-2 row-span-2 flex flex-col p-4">
+            <Outlet />
+          </Card>
+        </WalletsContext.Provider>
       </div>
     </>
   );
 };
 
-export default Wallet;
+export { Wallet, loader };
