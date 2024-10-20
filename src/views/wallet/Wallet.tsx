@@ -11,7 +11,7 @@ import { init } from 'emoji-mart';
 import data from '@emoji-mart/data';
 import { Button } from '@/components/ui/button';
 import { EllipsisVerticalIcon } from 'lucide-react';
-import { useQuery, QueryClient, useMutation } from '@tanstack/react-query';
+import { useQuery, QueryClient } from '@tanstack/react-query';
 import { LoaderFunctionArgs, Outlet } from 'react-router-dom';
 import { createContext } from 'react';
 init({ data });
@@ -85,8 +85,6 @@ const Wallet = () => {
           </CardHeader>
           <CardContent>Under Maintenance</CardContent>
         </Card>
-        {/* Add an Outlet */}
-        {/* <ThemeContext.Provider value="dark"></ThemeContext.Provider> */}
         <WalletsContext.Provider value={wallets}>
           <Card className="align-center bg-neutral-0 col-span-2 row-span-2 flex flex-col p-4">
             <Outlet />

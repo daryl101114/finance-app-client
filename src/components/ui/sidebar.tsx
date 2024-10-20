@@ -1,7 +1,7 @@
 import { MoreVertical, ChevronLast, ChevronFirst } from 'lucide-react';
 import { useContext, createContext, useState, ReactNode } from 'react';
 import { UserRound } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 interface SidebarContextProps {
   expanded: boolean;
 }
@@ -26,7 +26,6 @@ export function Sidebar({ children }: SidebarProps) {
               }`}
               src="../../public/5.svg"
             />
-
             <span
               className={`overflow-hidden text-3xl font-medium text-primary transition-all ${expanded ? 'w-15' : 'w-0'}`}
             >
@@ -41,11 +40,9 @@ export function Sidebar({ children }: SidebarProps) {
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>
         </div>
-
         <SidebarContext.Provider value={expanded}>
           <ul className="flex-1 px-3">{children}</ul>
         </SidebarContext.Provider>
-
         <div className="flex items-center justify-center border-t p-3">
           <UserRound className="h-10 w-10 rounded-md bg-primary-50 text-primary" />
           <div

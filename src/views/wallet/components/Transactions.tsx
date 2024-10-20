@@ -1,17 +1,8 @@
-import {
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+import { CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import AddTransactionModal from '@/components/modals/AddTransaction';
 import { getTransactionCategories } from '@/api/transactions';
-import {
-  LoaderFunctionArgs,
-} from 'react-router-dom';
-import {
-  useQuery,
-  QueryClient,
-} from '@tanstack/react-query';
+import { LoaderFunctionArgs } from 'react-router-dom';
+import { useQuery, QueryClient } from '@tanstack/react-query';
 
 const useTransactionCategoriesQuery = () => ({
   queryKey: ['transactCategories'],
