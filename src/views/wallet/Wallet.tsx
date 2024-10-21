@@ -13,7 +13,9 @@ import { Button } from '@/components/ui/button';
 import { EllipsisVerticalIcon } from 'lucide-react';
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { LoaderFunctionArgs, Outlet } from 'react-router-dom';
-import { createContext } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { getTransactions } from '@/api/transactions';
+import { IWalletTransactionType } from '@/configs/types/Transaction';
 init({ data });
 
 const userWalletsQuery = () => ({
@@ -30,8 +32,11 @@ const loader =
     const url = new URL(request.url);
     return url;
   };
-
-export const WalletsContext = createContext<IWalletType[] | undefined>(
+interface WalletsContextType {
+  wallets: IWalletType[];
+  walletTransactions: IWalletTransactionType[];
+}
+export const WalletsContext = createContext<WalletsContextType | undefined>(
   undefined,
 );
 
@@ -40,10 +45,36 @@ const Wallet = () => {
     ...userWalletsQuery(),
   });
 
+  const [selectedWalletId, setSelectedWalletId] = useState<string>('');
+  // const [walletTransactions, setWalletTransactions] = useState<IWalletTransactionType[]>([])
+
+  const { data: walletTransactions } = useQuery({
+    queryKey: ['transactions', selectedWalletId],
+    queryFn: async () => await getTransactions(selectedWalletId),
+    enabled: !!selectedWalletId, // disable this query from automatically running
+    refetchOnWindowFocus: false,
+  });
+
+  const selectWallet = async (wallet: IWalletType) => {
+    setSelectedWalletId(wallet.id); // Set selected wallet ID when a wallet is selected
+  };
+  useEffect(()=>{
+    if(wallets){
+      selectWallet(wallets[0])
+    }
+  },[])
   return (
     <>
       <div className="grid h-full grid-cols-3 grid-rows-3 gap-4 p-4">
-        <Card className="col-span-1 row-span-3 flex flex-col p-4">
+      <Card className="align-center col-span-3 row-span-1 bg-neutral-50 p-4">
+          <CardHeader className=" ">
+            <span className="flex w-full justify-center text-4xl text-neutral-800">
+              Balance
+            </span>
+          </CardHeader>
+          <CardContent>Under Maintenance</CardContent>
+        </Card>
+        <Card className="col-span-1 row-span-2 flex flex-col p-4">
           <CardHeader className="border-b-2">
             <div className="flex items-end justify-between">
               <span className="text-4xl text-primary-900">Wallets</span>
@@ -56,6 +87,7 @@ const Wallet = () => {
                   <div
                     key={item.id}
                     className="flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
+                    onClick={() => selectWallet(item)}
                   >
                     <em-emoji
                       className="h-12 w-12 rounded-full"
@@ -77,16 +109,14 @@ const Wallet = () => {
             <AddWalletModal />
           </CardFooter>
         </Card>
-        <Card className="align-center col-span-2 row-span-1 bg-neutral-50 p-4">
-          <CardHeader className=" ">
-            <span className="flex w-full justify-center text-4xl text-neutral-800">
-              Balance
-            </span>
-          </CardHeader>
-          <CardContent>Under Maintenance</CardContent>
-        </Card>
-        <WalletsContext.Provider value={wallets}>
-          <Card className="align-center bg-neutral-0 col-span-2 row-span-2 flex flex-col p-4">
+        
+        <WalletsContext.Provider
+          value={{
+            wallets: wallets || [],
+            walletTransactions: walletTransactions || [],
+          }}
+        >
+          <Card className="align-center col-span-2 row-span-2 flex flex-col p-4">
             <Outlet />
           </Card>
         </WalletsContext.Provider>

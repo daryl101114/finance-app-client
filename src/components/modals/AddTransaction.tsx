@@ -84,7 +84,7 @@ const AddTransactionModal = ({
   transactionCategories,
 }: transactionCategoriesProps) => {
   const queryClient = useQueryClient(); //Query qlient to interact with query cache
-  const wallets = useContext(WalletsContext); //*
+  const walletsContext = useContext(WalletsContext); //*
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -165,7 +165,7 @@ const AddTransactionModal = ({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {wallets?.map((wallet) => {
+                              {walletsContext?.wallets?.map((wallet) => {
                                 return (
                                   <SelectItem key={wallet.id} value={wallet.id}>
                                     <em-emoji id={wallet.emoji} size="1rem" />

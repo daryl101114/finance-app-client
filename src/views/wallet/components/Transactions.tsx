@@ -1,10 +1,12 @@
 import { CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import AddTransactionModal from '@/components/modals/AddTransaction';
-import { getTransactionCategories } from '@/api/transactions';
+import { getTransactionCategories, getTransactions } from '@/api/transactions';
 import { LoaderFunctionArgs } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
+import { WalletsContext } from '@/views/wallet/Wallet';
+import { useContext } from 'react';
 
-const useTransactionCategoriesQuery = () => ({
+const transactionCategoriesQuery = () => ({
   queryKey: ['transactCategories'],
   queryFn: async () => getTransactionCategories(),
 });
@@ -12,16 +14,16 @@ const useTransactionCategoriesQuery = () => ({
 const loader =
   (queryClient: QueryClient) =>
   async ({ request }: LoaderFunctionArgs) => {
-    await queryClient.ensureQueryData(useTransactionCategoriesQuery());
+    await queryClient.ensureQueryData(transactionCategoriesQuery());
     const url = new URL(request.url);
     return url;
   };
 
 const Transactions = () => {
   const { data: transactionCategories } = useQuery({
-    ...useTransactionCategoriesQuery(),
+    ...transactionCategoriesQuery(),
   });
-
+  const walletsContext = useContext(WalletsContext);
   return (
     <>
       <CardHeader>
@@ -29,7 +31,11 @@ const Transactions = () => {
           Transactions
         </span>
       </CardHeader>
-      <CardContent className="grow"></CardContent>
+      <CardContent className="grow">
+        {walletsContext?.walletTransactions?.map((item) => {
+          return <div key={item.id}>{item.transactionName}</div>;
+        })}
+      </CardContent>
       <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
         <AddTransactionModal
           transactionCategories={transactionCategories || []}
