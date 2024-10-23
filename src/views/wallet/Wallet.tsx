@@ -35,6 +35,7 @@ const loader =
 interface WalletsContextType {
   wallets: IWalletType[];
   walletTransactions: IWalletTransactionType[];
+  isDebtAccount: boolean
 }
 export const WalletsContext = createContext<WalletsContextType | undefined>(
   undefined,
@@ -45,28 +46,28 @@ const Wallet = () => {
     ...userWalletsQuery(),
   });
 
-  const [selectedWalletId, setSelectedWalletId] = useState<string>('');
+  const [selectedWallet, setSelectedWalletId] = useState<IWalletType|undefined>(undefined);
   // const [walletTransactions, setWalletTransactions] = useState<IWalletTransactionType[]>([])
 
   const { data: walletTransactions } = useQuery({
-    queryKey: ['transactions', selectedWalletId],
-    queryFn: async () => await getTransactions(selectedWalletId),
-    enabled: !!selectedWalletId, // disable this query from automatically running
+    queryKey: ['transactions', selectedWallet?.id],
+    queryFn: async () => await getTransactions(selectedWallet?.id || ''),
+    enabled: !!selectedWallet?.id, // disable this query from automatically running
     refetchOnWindowFocus: false,
   });
 
   const selectWallet = async (wallet: IWalletType) => {
-    setSelectedWalletId(wallet.id); // Set selected wallet ID when a wallet is selected
+    setSelectedWalletId(wallet); // Set selected wallet ID when a wallet is selected
   };
-  useEffect(()=>{
-    if(wallets){
-      selectWallet(wallets[0])
+  useEffect(() => {
+    if (wallets) {
+      selectWallet(wallets[0]);
     }
-  },[])
+  }, []);
   return (
     <>
-      <div className="grid h-full grid-cols-3 grid-rows-3 gap-4 p-4">
-      <Card className="align-center col-span-3 row-span-1 bg-neutral-50 p-4">
+      <div className="grid h-full grid-cols-2 grid-rows-3 gap-4 p-4">
+        <Card className="align-center col-span-3 row-span-1 bg-neutral-50 p-4">
           <CardHeader className=" ">
             <span className="flex w-full justify-center text-4xl text-neutral-800">
               Balance
@@ -74,7 +75,7 @@ const Wallet = () => {
           </CardHeader>
           <CardContent>Under Maintenance</CardContent>
         </Card>
-        <Card className="col-span-1 row-span-2 flex flex-col p-4">
+        <Card className="row-span-2 flex flex-col p-4">
           <CardHeader className="border-b-2">
             <div className="flex items-end justify-between">
               <span className="text-4xl text-primary-900">Wallets</span>
@@ -109,14 +110,15 @@ const Wallet = () => {
             <AddWalletModal />
           </CardFooter>
         </Card>
-        
+       
         <WalletsContext.Provider
           value={{
             wallets: wallets || [],
             walletTransactions: walletTransactions || [],
+            isDebtAccount: selectedWallet?.walletType.id === 3 
           }}
         >
-          <Card className="align-center col-span-2 row-span-2 flex flex-col p-4">
+          <Card className="align-center row-span-2 flex flex-col p-4">
             <Outlet />
           </Card>
         </WalletsContext.Provider>

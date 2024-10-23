@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (token && tokenDateString) {
       const currDate = new Date();
       const expiryDate = new Date(tokenDateString);
+      console.log('isValid');
       if (currDate >= expiryDate) {
         console.log('GET NEW TOKEN');
         logout();

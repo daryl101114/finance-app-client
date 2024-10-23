@@ -4,8 +4,8 @@ import { getTransactionCategories, getTransactions } from '@/api/transactions';
 import { LoaderFunctionArgs } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
 import { WalletsContext } from '@/views/wallet/Wallet';
-import { useContext } from 'react';
-
+import { useContext, useEffect, useState } from 'react';
+import { formatCurrency } from '@/lib/utils';
 const transactionCategoriesQuery = () => ({
   queryKey: ['transactCategories'],
   queryFn: async () => getTransactionCategories(),
@@ -18,22 +18,59 @@ const loader =
     const url = new URL(request.url);
     return url;
   };
-
+  
 const Transactions = () => {
+
   const { data: transactionCategories } = useQuery({
     ...transactionCategoriesQuery(),
   });
+
   const walletsContext = useContext(WalletsContext);
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    if (!walletsContext?.walletTransactions) return;
+
+    const total = walletsContext.walletTransactions.reduce((acc, { transactionType, amount }) => {
+      const isCredit = transactionType === 'credit';
+    
+      // Adjust based on account type and transaction type
+      const adjustedAmount = walletsContext.isDebtAccount 
+        ? (isCredit ? amount : -amount) 
+        : (isCredit ? -amount : amount);
+      return acc + adjustedAmount;
+    }, 0);
+  
+    setTotalAmount(total);
+  }, [walletsContext?.walletTransactions]);
+  
   return (
     <>
       <CardHeader>
-        <span className="flex justify-center text-4xl text-neutral-800">
-          Transactions
-        </span>
+      <div className="flex justify-between text-4xl">
+          <span>Transactions</span>
+          {/* { walletsContext?.isDebtAccount ?
+            totalAmount >= 0 ?<span className="text-red-400">{formatCurrency(totalAmount)}</span>:<span className="text-green-600">{formatCurrency(totalAmount)}</span> 
+            : totalAmount >= 0 ?<span className="text-green-600">{formatCurrency(totalAmount)}</span>:<span className="text-red-400">{formatCurrency(totalAmount)}</span>
+          } */}
+          <span className='text-neutral-600'>{formatCurrency(totalAmount)}</span>
+        </div>
       </CardHeader>
       <CardContent className="grow">
+        {/* <div></div> */}
         {walletsContext?.walletTransactions?.map((item) => {
-          return <div key={item.id}>{item.transactionName}</div>;
+          return (
+            <div
+              className="align flex items-center justify-between font-medium gap-3"
+              key={item.id}
+            >
+              <span className='text-md'>{item.transactionName}</span>
+              {
+                item.transactionType === 'credit' ? <span className='text-red-400'>{formatCurrency(item.amount)}</span>: <span className='text-green-600'>{formatCurrency(item.amount)}</span>
+                
+              }
+            </div>
+          );
         })}
       </CardContent>
       <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
@@ -44,5 +81,4 @@ const Transactions = () => {
     </>
   );
 };
-
 export { Transactions, loader };

@@ -1,3 +1,5 @@
+import { IWalletType } from "./Wallet";
+
 export interface TransactionCategoriesTypes {
   id: string;
   transactionCategoryName: string;
@@ -21,11 +23,12 @@ export interface IWalletTransactionType {
   walletId: string;
   transactionName: string;
   transactionDescription?: string;
-  amount: Number;
+  amount: number;
   transactionDate: Date;
   createdAt: Date;
   isRecurring: boolean;
   transactionType: string;
   transactionCategory: TransactionCategoriesTypes;
   transactionCategoryId: string;
+  wallet:IWalletType;
 }

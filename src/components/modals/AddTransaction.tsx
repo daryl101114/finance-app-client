@@ -43,7 +43,7 @@ import {
   TransactionCategoriesTypes,
   ITransaction,
 } from '@/configs/types/Transaction';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { WalletsContext } from '@/views/wallet/Wallet'; //*
 import { addTransaction } from '@/api/transactions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -98,23 +98,24 @@ const AddTransactionModal = ({
       transactionCategoryId: '',
     },
   });
+  const [selectedWalletId, setSelectedWalletId] = useState('');
   const mutation = useMutation({
     mutationFn: async (form: ITransaction) => {
       await addTransaction(form);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userWallets'] });
+      queryClient.invalidateQueries({
+        queryKey: ['transactions', selectedWalletId],
+      });
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('hit', values);
-
     let transaction: ITransaction = {
       ...values,
       createdAt: new Date(),
     };
-
+    setSelectedWalletId(values.walletId);
     mutation.mutate(transaction);
     form.reset();
   }

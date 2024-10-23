@@ -5,6 +5,10 @@ export interface IWalletCreationType {
   currency: string;
   emoji: string;
 }
+interface IWalletTypeType{
+  id:number,
+  type:string
+}
 
 export interface IWalletType {
   id: string;
@@ -13,4 +17,6 @@ export interface IWalletType {
   balance: number;
   currency: string;
   emoji: string;
+  walletType: IWalletTypeType;
+  walletTypeId: number;
 }
