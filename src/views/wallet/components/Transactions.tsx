@@ -6,6 +6,7 @@ import { useQuery, QueryClient } from '@tanstack/react-query';
 import { WalletsContext } from '@/views/wallet/Wallet';
 import { useContext, useEffect, useState } from 'react';
 import { formatCurrency } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 const transactionCategoriesQuery = () => ({
   queryKey: ['transactCategories'],
   queryFn: async () => getTransactionCategories(),
@@ -48,16 +49,12 @@ const Transactions = () => {
     <>
       <CardHeader>
       <div className="flex justify-between text-4xl">
-          <span>Transactions</span>
-          {/* { walletsContext?.isDebtAccount ?
-            totalAmount >= 0 ?<span className="text-red-400">{formatCurrency(totalAmount)}</span>:<span className="text-green-600">{formatCurrency(totalAmount)}</span> 
-            : totalAmount >= 0 ?<span className="text-green-600">{formatCurrency(totalAmount)}</span>:<span className="text-red-400">{formatCurrency(totalAmount)}</span>
-          } */}
-          <span className='text-neutral-600'>{formatCurrency(totalAmount)}</span>
+          <span className='text-primary-900'>Transactions</span>
+          <span className='text-primary-700'>{formatCurrency(totalAmount)}</span>
         </div>
       </CardHeader>
       <CardContent className="grow">
-        {/* <div></div> */}
+        <ScrollArea>
         {walletsContext?.walletTransactions?.map((item) => {
           return (
             <div
@@ -66,12 +63,13 @@ const Transactions = () => {
             >
               <span className='text-md'>{item.transactionName}</span>
               {
-                item.transactionType === 'credit' ? <span className='text-red-400'>{formatCurrency(item.amount)}</span>: <span className='text-green-600'>{formatCurrency(item.amount)}</span>
+                item.transactionType === 'credit' ? <span className='text-red-500'>{formatCurrency(item.amount)}</span>: <span className='text-green-600'>{formatCurrency(item.amount)}</span>
                 
               }
             </div>
           );
         })}
+        </ScrollArea>
       </CardContent>
       <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
         <AddTransactionModal

@@ -16,6 +16,7 @@ import { LoaderFunctionArgs, Outlet } from 'react-router-dom';
 import { createContext, useEffect, useState } from 'react';
 import { getTransactions } from '@/api/transactions';
 import { IWalletTransactionType } from '@/configs/types/Transaction';
+import { ScrollArea } from '@/components/ui/scroll-area';
 init({ data });
 
 const userWalletsQuery = () => ({
@@ -69,7 +70,7 @@ const Wallet = () => {
       <div className="grid h-full grid-cols-2 grid-rows-3 gap-4 p-4">
         <Card className="align-center col-span-3 row-span-1 bg-neutral-50 p-4">
           <CardHeader className=" ">
-            <span className="flex w-full justify-center text-4xl text-neutral-800">
+            <span className="flex w-full justify-center text-4xl text-primary-900">
               Balance
             </span>
           </CardHeader>
@@ -82,6 +83,7 @@ const Wallet = () => {
             </div>
           </CardHeader>
           <CardContent className="grow">
+          <ScrollArea>
             <div className="mt-4 transition ease-in-out">
               {wallets?.map((item: IWalletType) => {
                 return (
@@ -105,6 +107,7 @@ const Wallet = () => {
                 );
               })}
             </div>
+            </ScrollArea>
           </CardContent>
           <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
             <AddWalletModal />
