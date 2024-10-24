@@ -7,9 +7,10 @@ import {
   useEffect,
 } from 'react';
 import { getItem } from '../lib/utils';
+import { jwtDecode } from 'jwt-decode';
 
 interface AuthContextType {
-  token: AuthorizedType | null;
+  token: string;
   authenticate: () => void;
   logout: () => void;
 }
@@ -18,12 +19,9 @@ const AuthContext = createContext<AuthContextType | null>(null);
 interface AuthProviderProps {
   children: ReactNode;
 }
-interface AuthorizedType {
-  token: string;
-}
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [token, setToken] = useState(getItem<AuthorizedType>('token'));
+  const [token, setToken] = useState<string>(getItem<string>('token')||'');
 
   useEffect(() => {
     //Authentication logic here
@@ -45,12 +43,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [token]);
   const authenticate = () => {
     console.log('Authenticating');
-    try {
-      const authenticated = getItem<AuthorizedType>('token');
-      setToken(authenticated);
-    } catch (err) {
-      console.log(err);
-    }
+          /** Valid Token
+       * 1. token must exist
+       * 2. Token must not be expired
+       */
+      const token = getItem<string>('token');
+      let decodedToken = jwtDecode(token || '')
+      if(!decodedToken){
+        console.log("invalid token");
+        logout();
+      }
+      
+      if(decodedToken?.exp){
+        if (Date.now() >= decodedToken.exp * 1000) {
+          console.log("Need new tokens!!!!!")
+          logout();
+        }
+      }
+      setToken(token||'');
   };
 
   const logout = () => {
