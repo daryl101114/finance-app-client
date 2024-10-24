@@ -7,6 +7,7 @@ import { WalletsContext } from '@/views/wallet/Wallet';
 import { useContext, useEffect, useState } from 'react';
 import { formatCurrency } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import Icon from '@/components/ui/icon'
 const transactionCategoriesQuery = () => ({
   queryKey: ['transactCategories'],
   queryFn: async () => getTransactionCategories(),
@@ -58,10 +59,12 @@ const Transactions = () => {
         {walletsContext?.walletTransactions?.map((item) => {
           return (
             <div
-              className="align flex items-center justify-between font-medium gap-3"
+              className="align flex items-center justify-between font-medium my-2"
               key={item.id}
             >
-              <span className='text-md'>{item.transactionName}</span>
+              <span className='flex items-center gap-1'>
+                <Icon className="text-primary-600" name={item.transactionCategory.icon} size="1.5rem" />
+                {item.transactionName }</span>
               {
                 item.transactionType === 'credit' ? <span className='text-red-500'>{formatCurrency(item.amount)}</span>: <span className='text-green-600'>{formatCurrency(item.amount)}</span>
                 

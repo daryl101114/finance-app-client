@@ -1,9 +1,12 @@
+import dynamicIconImports from "lucide-react/dynamicIconImports";
 import { IWalletType } from "./Wallet";
 
 export interface TransactionCategoriesTypes {
   id: string;
   transactionCategoryName: string;
   isFixed: boolean;
+  icon: keyof typeof dynamicIconImports;
+  color: string;
 }
 
 export interface ITransaction {
