@@ -185,7 +185,9 @@ button:focus-visible {
 }
 
 }
-
+[data-vaul-drawer][data-vaul-drawer-direction=right]::after{
+  width: 0px !important;
+}
 
 @layer base {
   * {

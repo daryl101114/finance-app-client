@@ -1,7 +1,7 @@
 import { MoreVertical, ChevronLast, ChevronFirst } from 'lucide-react';
 import { useContext, createContext, useState, ReactNode } from 'react';
 import { UserRound } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 interface SidebarContextProps {
   expanded: boolean;
 }
@@ -15,7 +15,6 @@ export function Sidebar({ children }: SidebarProps) {
   const [expanded, setExpanded] = useState(true);
   const userName = localStorage.getItem('fullName');
   const email = localStorage.getItem('email') || '';
-  const navigate = useNavigate();
   return (
     <aside className="h-screen">
       <nav className="bg-white flex h-full flex-col border-r shadow-sm">
@@ -27,7 +26,6 @@ export function Sidebar({ children }: SidebarProps) {
               }`}
               src="../../public/5.svg"
             />
-
             <span
               className={`overflow-hidden text-3xl font-medium text-primary transition-all ${expanded ? 'w-15' : 'w-0'}`}
             >
@@ -42,11 +40,9 @@ export function Sidebar({ children }: SidebarProps) {
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>
         </div>
-
         <SidebarContext.Provider value={expanded}>
           <ul className="flex-1 px-3">{children}</ul>
         </SidebarContext.Provider>
-
         <div className="flex items-center justify-center border-t p-3">
           <UserRound className="h-10 w-10 rounded-md bg-primary-50 text-primary" />
           <div
@@ -80,18 +76,14 @@ export function SidebarItem({
   navigateTo,
 }: SidebarItemProps) {
   const expanded = useContext(SidebarContext);
-  const navigate = useNavigate();
-  console.log(icon, text, active, alert, expanded);
   return (
-    <li
+    <Link
       className={`group relative my-1 flex cursor-pointer items-center rounded-md px-3 py-2 font-medium font-semibold transition-colors ${
         active
           ? 'bg-gradient-to-tr from-primary to-primary-300 text-primary-50'
           : 'text-neutral-700 hover:bg-primary-50'
       } `}
-      onClick={() => {
-        navigate(navigateTo);
-      }}
+      to={navigateTo}
     >
       <div className="items-center">{icon}</div>
       <span
@@ -116,6 +108,6 @@ export function SidebarItem({
           {text}
         </div>
       )}
-    </li>
+    </Link>
   );
 }

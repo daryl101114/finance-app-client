@@ -7,9 +7,10 @@ import {
   useEffect,
 } from 'react';
 import { getItem } from '../lib/utils';
+import { jwtDecode } from 'jwt-decode';
 
 interface AuthContextType {
-  token: AuthorizedType | null;
+  token:  AuthorizedType | null;
   authenticate: () => void;
   logout: () => void;
 }
@@ -21,7 +22,6 @@ interface AuthProviderProps {
 interface AuthorizedType {
   token: string;
 }
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState(getItem<AuthorizedType>('token'));
 
@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (token && tokenDateString) {
       const currDate = new Date();
       const expiryDate = new Date(tokenDateString);
+      console.log('isValid');
       if (currDate >= expiryDate) {
         console.log('GET NEW TOKEN');
         logout();
@@ -44,12 +45,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [token]);
   const authenticate = () => {
     console.log('Authenticating');
-    try {
-      const authenticated = getItem<AuthorizedType>('token');
-      setToken(authenticated);
-    } catch (err) {
-      console.log(err);
-    }
+      try {
+        const authenticated = getItem<AuthorizedType>('token');
+        setToken(authenticated);
+      } catch (err) {
+        console.log(err);
+      }
   };
 
   const logout = () => {

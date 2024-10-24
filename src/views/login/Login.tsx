@@ -111,7 +111,7 @@ const Login: React.FC = () => {
             />
           </div>
           <Button
-            className="delay-50 bg-primary text-md transition-all duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 flex justify-center items-center"
+            className="delay-50 text-md flex items-center justify-center bg-primary transition-all duration-300 ease-in-out hover:-translate-y-1 hover:scale-110"
             onClick={handleLogin}
           >
             Login User

@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,14 +33,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 init({ data });
-
 
 const twoDecimalPlacesRegex = /^\d+(\.\d{1,2})?$/;
 //Form Definition
 const formSchema = z.object({
   walletName: z.string().min(2).max(50),
-  walletType: z.string().min(1, {message:"Must select wallet type"}).max(50),
+  walletType: z.string().min(1, { message: 'Must select wallet type' }).max(50),
   balance: z
     .string() // Accepts string input first (since form inputs are strings)
     .max(19, { message: 'Value is to large to be a valid currency' })
@@ -53,6 +52,7 @@ const formSchema = z.object({
 });
 
 const AddWalletModal = () => {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   // const [pickedEmoji, setPickedEmoji] = useState('bank');
   const form = useForm<z.infer<typeof formSchema>>({
@@ -64,9 +64,16 @@ const AddWalletModal = () => {
       currency: 'USD',
     },
   });
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
 
+  const mutation = useMutation({
+    mutationFn: async (form: IWalletCreationType) => {
+      await addWallet(form);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userWallets'] });
+    },
+  });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     //Map form values to IWalletCreationType
     const wallet: IWalletCreationType = {
       accountName: values.walletName,
@@ -77,7 +84,7 @@ const AddWalletModal = () => {
     };
 
     //Add Wwallet
-    await addWallet(wallet);
+    mutation.mutate(wallet);
     form.reset();
     setOpen(false);
   }
@@ -93,11 +100,11 @@ const AddWalletModal = () => {
       >
         <DialogTrigger asChild>
           <Button
-            className="transition ease-in-out delay-100 h-12 w-12 rounded-full p-2 hover:scale-110"
+            className="rounded-full p-3 transition delay-100 ease-in-out hover:scale-110"
             variant="default"
-            size="icon"
           >
-            <PlusIcon className="h-10 w-10" />
+            <PlusIcon className="mr-1 h-4 w-4" />
+            Wallet
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -139,16 +146,18 @@ const AddWalletModal = () => {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value={'Cash Account'}>
-                          <em-emoji  id="dollar" size="1rem" /> Cash Account
+                            <em-emoji id="dollar" size="1rem" /> Cash Account
                           </SelectItem>
                           <SelectItem value={'Savings Account'}>
-                          <em-emoji id="moneybag" size="1rem" />  Savings Account
+                            <em-emoji id="moneybag" size="1rem" /> Savings
+                            Account
                           </SelectItem>
                           <SelectItem value={'Debt Account'}>
-                          <em-emoji  id="credit_card" size="1rem" />  Debt Account
+                            <em-emoji id="credit_card" size="1rem" /> Debt
+                            Account
                           </SelectItem>
                           <SelectItem value={'Asset Account'}>
-                          <em-emoji id="gem" size="1rem" />  Asset Account
+                            <em-emoji id="gem" size="1rem" /> Asset Account
                           </SelectItem>
                         </SelectContent>
                       </Select>

@@ -8,6 +8,7 @@ interface PrivateRoutesProps {
 const PrivateRoutes = ({ children }: PrivateRoutesProps): JSX.Element => {
   const { token } = useAuth();
   const location = useLocation();
+  // console.log(token)
   // authenticate();
   if (!token) {
     // Redirect to login page, preserving the location state
