@@ -16,7 +16,7 @@ export function Sidebar({ children }: SidebarProps) {
   const userName = localStorage.getItem('fullName');
   const email = localStorage.getItem('email') || '';
   return (
-    <aside className="h-screen">
+    <aside className="min-h-screen">
       <nav className="bg-white flex h-full flex-col border-r shadow-sm">
         <div className="flex items-center justify-between p-4 pb-2">
           <span className="flex">

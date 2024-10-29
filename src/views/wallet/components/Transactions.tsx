@@ -29,23 +29,39 @@ const Transactions = () => {
 
   const walletsContext = useContext(WalletsContext);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [isComponentLoading, setComponentLoading] = useState(false);
 
   useEffect(() => {
-    if (!walletsContext?.walletTransactions) return;
-
-    const total = walletsContext.walletTransactions.reduce((acc, { transactionType, amount }) => {
-      const isCredit = transactionType === 'credit';
+   
+    try{
+      if (!walletsContext?.walletTransactions) return;
+      setComponentLoading(true);
+      const total = walletsContext.walletTransactions.reduce((acc, { transactionType, amount }) => {
+        const isCredit = transactionType === 'credit';
+      
+        // Adjust based on account type and transaction type
+        const adjustedAmount = walletsContext.isDebtAccount 
+          ? (isCredit ? amount : -amount) 
+          : (isCredit ? -amount : amount);
+        return acc + adjustedAmount;
+      }, 0);
     
-      // Adjust based on account type and transaction type
-      const adjustedAmount = walletsContext.isDebtAccount 
-        ? (isCredit ? amount : -amount) 
-        : (isCredit ? -amount : amount);
-      return acc + adjustedAmount;
-    }, 0);
-  
-    setTotalAmount(total);
+      setTotalAmount(total);
+    }
+    finally{
+      setComponentLoading(false);
+    }
+   
   }, [walletsContext?.walletTransactions]);
-  
+  if(isComponentLoading){
+    return(<>
+    <div className='h-full w-full flex justify-center items-center'>
+      <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"> </path>
+      </svg> LOADING...
+    </div>
+    </>)
+  }
   return (
     <>
       <CardHeader>
@@ -59,7 +75,7 @@ const Transactions = () => {
         {walletsContext?.walletTransactions?.map((item) => {
           return (
             <div
-              className="align flex items-center justify-between font-medium my-2"
+              className="align flex items-center justify-between font-medium my-2 "
               key={item.id}
             >
               <span className='flex items-center gap-1'>

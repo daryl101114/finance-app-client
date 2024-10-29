@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // import Box from '@mui/material/Box';
 // import TextField from '@mui/material/TextField';
 import { IUser } from '../../configs/types/User';
-import { registerUser } from '../../api/login/login';
+import { registerUser } from '@/api/login';
 // import { Button } from '@mui/material';
 
 const Register = () => {

@@ -83,8 +83,14 @@ const formSchema = z.object({
 const AddTransactionModal = ({
   transactionCategories,
 }: transactionCategoriesProps) => {
+  //COMPONENT STATES
   const queryClient = useQueryClient(); //Query qlient to interact with query cache
   const walletsContext = useContext(WalletsContext); //*
+  const [open, setOpen] = useState(false);
+  const [selectedWalletId, setSelectedWalletId] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
+  //FORM
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -98,7 +104,8 @@ const AddTransactionModal = ({
       transactionCategoryId: '',
     },
   });
-  const [selectedWalletId, setSelectedWalletId] = useState('');
+  
+  //Query
   const mutation = useMutation({
     mutationFn: async (form: ITransaction) => {
       await addTransaction(form);
@@ -110,7 +117,9 @@ const AddTransactionModal = ({
     },
   });
 
+  //Submit form
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     let transaction: ITransaction = {
       ...values,
       createdAt: new Date(),
@@ -118,6 +127,8 @@ const AddTransactionModal = ({
     setSelectedWalletId(values.walletId);
     mutation.mutate(transaction);
     form.reset();
+    setLoading(false);
+    setOpen(false);
   }
 
   return (
@@ -349,7 +360,13 @@ const AddTransactionModal = ({
                       )}
                     />
                     <Button className="w-full" type="submit">
-                      Add Transaction
+                    {isLoading ? 
+                      <div>
+                        <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"> </path>
+                        </svg> Processing...
+                      </div> : 
+                      <div>Add Transaction</div>}
                     </Button>
                     <DrawerClose asChild>
                       <Button className="w-full" variant="outline">
