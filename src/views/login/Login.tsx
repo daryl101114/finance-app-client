@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ILoginUser } from '../../configs/types/User';
 import { loginUser } from '@/api/login';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@/context/useAuth';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { jwtDecode } from 'jwt-decode';

@@ -7,7 +7,6 @@ import {
   useEffect,
 } from 'react';
 import { getItem } from '../lib/utils';
-import { jwtDecode } from 'jwt-decode';
 
 interface AuthContextType {
   token:  AuthorizedType | null;

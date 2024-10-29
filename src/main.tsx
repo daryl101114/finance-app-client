@@ -9,14 +9,11 @@ import Dashboard from './views/dashboard/Dashboard.tsx';
 import { Wallet, loader as walletLoader } from '@/views/wallet/Wallet.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
-import { AuthProvider } from './hooks/useAuth';
+import { AuthProvider } from './context/useAuth.tsx';
+import { AppContextProvider } from '@/context/AppContextProvider.tsx'
 import axios from 'axios';
 import { getItem } from '@/lib/utils.ts';
-import data from '@emoji-mart/data';
 import {
-  useQuery,
-  useMutation,
-  useQueryClient,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
@@ -111,7 +108,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <AuthProvider>
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
+        <AppContextProvider>
         <RouterProvider router={router} />
+        </AppContextProvider>
       </QueryClientProvider>
     </React.StrictMode>
   </AuthProvider>,

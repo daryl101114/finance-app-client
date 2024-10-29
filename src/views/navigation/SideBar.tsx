@@ -5,7 +5,8 @@ import {
   ReceiptTextIcon,
 } from 'lucide-react';
 
-const Navbar = () => {
+const SideBar = () => {
+ 
   return (
     <>
       <Sidebar>
@@ -32,4 +33,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default SideBar;
