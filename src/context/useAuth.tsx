@@ -9,7 +9,7 @@ import {
 import { getItem } from '../lib/utils';
 
 interface AuthContextType {
-  token:  AuthorizedType | null;
+  token: AuthorizedType | null;
   authenticate: () => void;
   logout: () => void;
 }
@@ -44,12 +44,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [token]);
   const authenticate = () => {
     console.log('Authenticating');
-      try {
-        const authenticated = getItem<AuthorizedType>('token');
-        setToken(authenticated);
-      } catch (err) {
-        console.log(err);
-      }
+    try {
+      const authenticated = getItem<AuthorizedType>('token');
+      setToken(authenticated);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const logout = () => {

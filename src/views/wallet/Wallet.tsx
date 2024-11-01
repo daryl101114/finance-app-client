@@ -36,7 +36,7 @@ const loader =
 interface WalletsContextType {
   wallets: IWalletType[];
   walletTransactions: IWalletTransactionType[];
-  isDebtAccount: boolean
+  isDebtAccount: boolean;
 }
 export const WalletsContext = createContext<WalletsContextType | undefined>(
   undefined,
@@ -47,7 +47,9 @@ const Wallet = () => {
     ...userWalletsQuery(),
   });
 
-  const [selectedWallet, setSelectedWalletId] = useState<IWalletType|undefined>(undefined);
+  const [selectedWallet, setSelectedWalletId] = useState<
+    IWalletType | undefined
+  >(undefined);
   // const [walletTransactions, setWalletTransactions] = useState<IWalletTransactionType[]>([])
 
   const { data: walletTransactions } = useQuery({
@@ -83,42 +85,42 @@ const Wallet = () => {
             </div>
           </CardHeader>
           <CardContent className="grow">
-          <ScrollArea>
-            <div className="mt-4 transition ease-in-out">
-              {wallets?.map((item: IWalletType) => {
-                return (
-                  <div
-                    key={item.id}
-                    className="flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
-                    onClick={() => selectWallet(item)}
-                  >
-                    <em-emoji
-                      className="h-12 w-12 rounded-full"
-                      id={item.emoji}
-                      size="2rem"
-                    ></em-emoji>
-                    <div className="grow text-xl text-black">
-                      {item.accountName}
+            <ScrollArea>
+              <div className="mt-4 transition ease-in-out">
+                {wallets?.map((item: IWalletType) => {
+                  return (
+                    <div
+                      key={item.id}
+                      className="flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
+                      onClick={() => selectWallet(item)}
+                    >
+                      <em-emoji
+                        className="h-12 w-12 rounded-full"
+                        id={item.emoji}
+                        size="2rem"
+                      ></em-emoji>
+                      <div className="grow text-xl text-black">
+                        {item.accountName}
+                      </div>
+                      <Button variant="ghost" size="icon">
+                        <EllipsisVerticalIcon className="text-neutral-700" />
+                      </Button>
                     </div>
-                    <Button variant="ghost" size="icon">
-                      <EllipsisVerticalIcon className="text-neutral-700" />
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
             </ScrollArea>
           </CardContent>
           <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
             <AddWalletModal />
           </CardFooter>
         </Card>
-       
+
         <WalletsContext.Provider
           value={{
             wallets: wallets || [],
             walletTransactions: walletTransactions || [],
-            isDebtAccount: selectedWallet?.walletType.id === 3 
+            isDebtAccount: selectedWallet?.walletType.id === 3,
           }}
         >
           <Card className="align-center row-span-2 flex flex-col p-4">

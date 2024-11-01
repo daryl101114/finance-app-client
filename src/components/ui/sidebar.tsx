@@ -1,8 +1,13 @@
 import { MoreVertical, ChevronLast, ChevronFirst } from 'lucide-react';
-import { useContext, createContext, useState, ReactNode, useEffect } from 'react';
+import {
+  useContext,
+  createContext,
+  useState,
+  ReactNode,
+  useEffect
+} from 'react';
 import { UserRound } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useAppContext } from '@/context/AppContextProvider';
 interface SidebarContextProps {
   expanded: boolean;
 }
@@ -13,25 +18,25 @@ interface SidebarProps {
 }
 
 export function Sidebar({ children }: SidebarProps) {
-  const {screenSize, setScreenSize} = useAppContext();
-  const [expanded, setExpanded] = useState(true);
+  // const { screenSize, setScreenSize } = useAppContext();
+  const [expanded] = useState(true);
   const userName = localStorage.getItem('fullName');
   const email = localStorage.getItem('email') || '';
 
-  useEffect(()=>{
-    console.log(expanded)
-    if((screenSize && screenSize < 1080)){
-      setExpanded(false);
-    }else{
-      setExpanded(true)
-    }
-  },[screenSize])
-  
+  // useEffect(() => {
+  //   console.log(expanded);
+  //   if (screenSize && screenSize < 1080) {
+  //     setExpanded(true);
+  //   } else {
+  //     setExpanded(true);
+  //   }
+  // }, [screenSize]);
+
   return (
-    <aside className="min-h-screen ">
+    <aside className="min-h-screen">
       <nav className="bg-white flex h-full flex-col border-r shadow-sm">
         <div className="flex items-center justify-between p-4 pb-2">
-          <span className="flex">
+          {/* <span className="flex">
             <img
               className={`overflow-hidden transition-all ${
                 expanded ? 'w-7' : 'w-7'
@@ -43,14 +48,14 @@ export function Sidebar({ children }: SidebarProps) {
             >
               Budgify
             </span>
-          </span>
+          </span> */}
 
-          <button
+          {/* <button
             onClick={() => setExpanded((curr) => !curr)}
             className="bg-gray-50 hover:bg-gray-100 rounded-lg"
           >
             {expanded ? <ChevronFirst /> : <ChevronLast />}
-          </button>
+          </button> */}
         </div>
         <SidebarContext.Provider value={expanded}>
           <ul className="flex-1 px-3">{children}</ul>

@@ -5,9 +5,9 @@ export interface IWalletCreationType {
   currency: string;
   emoji: string;
 }
-interface IWalletTypeType{
-  id:number,
-  type:string
+interface IWalletTypeType {
+  id: number;
+  type: string;
 }
 
 export interface IWalletType {

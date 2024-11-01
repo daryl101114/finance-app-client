@@ -1,5 +1,5 @@
-import dynamicIconImports from "lucide-react/dynamicIconImports";
-import { IWalletType } from "./Wallet";
+import dynamicIconImports from 'lucide-react/dynamicIconImports';
+import { IWalletType } from './Wallet';
 
 export interface TransactionCategoriesTypes {
   id: string;
@@ -33,5 +33,5 @@ export interface IWalletTransactionType {
   transactionType: string;
   transactionCategory: TransactionCategoriesTypes;
   transactionCategoryId: string;
-  wallet:IWalletType;
+  wallet: IWalletType;
 }

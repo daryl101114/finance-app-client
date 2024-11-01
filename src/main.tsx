@@ -10,13 +10,10 @@ import { Wallet, loader as walletLoader } from '@/views/wallet/Wallet.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
 import { AuthProvider } from './context/useAuth.tsx';
-import { AppContextProvider } from '@/context/AppContextProvider.tsx'
+import { AppContextProvider } from '@/context/AppContextProvider.tsx';
 import axios from 'axios';
 import { getItem } from '@/lib/utils.ts';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   Transactions,
   loader as transactLoader,
@@ -109,7 +106,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <AppContextProvider>
-        <RouterProvider router={router} />
+          <RouterProvider router={router} />
         </AppContextProvider>
       </QueryClientProvider>
     </React.StrictMode>
