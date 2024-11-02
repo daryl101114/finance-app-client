@@ -8,6 +8,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { AlignJustifyIcon } from 'lucide-react';
+import { lazy } from 'react';
 import SideBar from './SideBar';
 
 export const NavBar = () => {

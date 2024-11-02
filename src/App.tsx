@@ -18,14 +18,14 @@ function App() {
 
   return (
     <>
-      {/* <SideBar /> */}
-      <div className="flex h-14 w-full">
+      <div className="flex h-[7vh] w-full">
         <NavBar />
       </div>
-
-      {/* <div className="flex-1 bg-neutral-50">
+      <article className='bg-neutral-50 min-h-[93vh] flex justify-center'>
+        <section className='flex-1 min-w-[390px] max-w-[80%]'>
           <Outlet />
-      </div> */}
+        </section>
+      </article>
     </>
   );
 }

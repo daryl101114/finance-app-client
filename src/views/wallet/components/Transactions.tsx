@@ -76,10 +76,10 @@ const Transactions = () => {
   }
   return (
     <>
-      <CardHeader>
-        <div className="flex justify-between text-4xl">
+      <CardHeader className="border-b-2">
+        <div className="flex justify-between text-2xl">
           <span className="text-primary-900">Transactions</span>
-          <span className="text-primary-700">
+          <span className="text-primary">
             {formatCurrency(totalAmount)}
           </span>
         </div>
@@ -89,19 +89,19 @@ const Transactions = () => {
           {walletsContext?.walletTransactions?.map((item) => {
             return (
               <div
-                className="align my-2 flex items-center justify-between font-medium"
+                className="align my-2 flex flex-nowrap items-center justify-between font-medium "
                 key={item.id}
               >
-                <span className="flex items-center gap-1">
+                <div className="flex flex-nowrap items-center gap-1">
                   <Icon
                     className="text-primary-600"
                     name={item.transactionCategory.icon}
                     size="1.5rem"
                   />
-                  {item.transactionName}
-                </span>
+                  <p>{item.transactionName}</p>
+                </div>
                 {item.transactionType === 'credit' ? (
-                  <span className="text-red-500">
+                  <span className="text-neutral-500">
                     {formatCurrency(item.amount)}
                   </span>
                 ) : (

@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import ReactDOM from 'react-dom/client';
 import Login from './views/login/Login.tsx';
 import './styles/index.css';
-import App from './App.tsx';
 import ErrorPage from './views/error-page/ErrorPage.tsx';
 import Register from './views/register-page/Register.tsx';
 import Dashboard from './views/dashboard/Dashboard.tsx';
@@ -18,6 +17,8 @@ import {
   Transactions,
   loader as transactLoader,
 } from './views/wallet/components/Transactions.tsx';
+
+const App = lazy(() => import('@/App.tsx'))
 
 declare global {
   namespace JSX {
@@ -37,7 +38,6 @@ axios.interceptors.request.use(function (config) {
   return config;
 });
 // Create a client
-// const queryClient = new QueryClient()
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -86,7 +86,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'Wallets',
+        path: 'Budgets',
         element: (
           <div className="p-5 text-5xl font-semibold text-primary">Budgets</div>
         ),

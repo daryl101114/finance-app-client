@@ -69,65 +69,66 @@ const Wallet = () => {
   }, []);
   return (
     <>
-      <div className="grid h-full grid-cols-2 grid-rows-3 gap-4 p-4">
-        <Card className="align-center col-span-3 row-span-1 bg-neutral-50 p-4">
+      <div className="flex flex-col min-h-[93vh] gap-2 p-4">
+        <Card className="align-center bg-neutral-100 p-4">
           <CardHeader className=" ">
-            <span className="flex w-full justify-center text-4xl text-primary-900">
-              Balance
+            <span className="flex w-full justify-center text-2xl text-primary-900">
+              Charts
             </span>
           </CardHeader>
-          <CardContent>Under Maintenance</CardContent>
+          <CardContent>Maybe a bar chart comparing total credit and debit for each account? </CardContent>
         </Card>
-        <Card className="row-span-2 flex flex-col p-4">
-          <CardHeader className="border-b-2">
-            <div className="flex items-end justify-between">
-              <span className="text-4xl text-primary-900">Wallets</span>
-            </div>
-          </CardHeader>
-          <CardContent className="grow">
-            <ScrollArea>
-              <div className="mt-4 transition ease-in-out">
-                {wallets?.map((item: IWalletType) => {
-                  return (
-                    <div
-                      key={item.id}
-                      className="flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
-                      onClick={() => selectWallet(item)}
-                    >
-                      <em-emoji
-                        className="h-12 w-12 rounded-full"
-                        id={item.emoji}
-                        size="2rem"
-                      ></em-emoji>
-                      <div className="grow text-xl text-black">
-                        {item.accountName}
-                      </div>
-                      <Button variant="ghost" size="icon">
-                        <EllipsisVerticalIcon className="text-neutral-700" />
-                      </Button>
-                    </div>
-                  );
-                })}
+        <div className="flex flex-1 flex-wrap gap-2">
+          <Card className=' flex  flex-col w-full md:w-5/12 p-4' >
+            <CardHeader className="border-b-2">
+              <div className="flex items-end justify-between">
+                <span className="text-2xl text-primary-900">Wallets</span>
               </div>
-            </ScrollArea>
-          </CardContent>
-          <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
-            <AddWalletModal />
-          </CardFooter>
-        </Card>
-
-        <WalletsContext.Provider
+            </CardHeader>
+            <CardContent className="grow">
+              <ScrollArea>
+                <div className="mt-4 transition ease-in-out">
+                  {wallets?.map((item: IWalletType) => {
+                    return (
+                      <div
+                        key={item.id}
+                        className="flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
+                        onClick={() => selectWallet(item)}
+                      >
+                        <em-emoji
+                          className="h-12 w-12 rounded-full"
+                          id={item.emoji}
+                          size="2rem"
+                        ></em-emoji>
+                        <div className="grow text-lg text-black text-ellipsis overflow-hidden text-nowrap">
+                          {item.accountName}
+                        </div>
+                        <Button variant="ghost" size="icon">
+                          <EllipsisVerticalIcon className="text-neutral-700" />
+                        </Button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </ScrollArea>
+            </CardContent>
+            <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
+              <AddWalletModal />
+            </CardFooter>
+          </Card>
+         <WalletsContext.Provider
           value={{
             wallets: wallets || [],
             walletTransactions: walletTransactions || [],
             isDebtAccount: selectedWallet?.walletType.id === 3,
           }}
         >
-          <Card className="align-center row-span-2 flex flex-col p-4">
+          <Card className="align-center flex-1 flex flex-col p-4 ">
             <Outlet />
           </Card>
         </WalletsContext.Provider>
-      </div>
+      </div></div>
+        
     </>
   );
 };
