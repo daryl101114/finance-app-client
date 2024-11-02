@@ -1,11 +1,8 @@
-import React, {lazy} from 'react';
+import React, { lazy } from 'react';
 import ReactDOM from 'react-dom/client';
-import Login from './views/login/Login.tsx';
 import './styles/index.css';
 import ErrorPage from './views/error-page/ErrorPage.tsx';
-import Register from './views/register-page/Register.tsx';
 import Dashboard from './views/dashboard/Dashboard.tsx';
-import { Wallet, loader as walletLoader } from '@/views/wallet/Wallet.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
 import { AuthProvider } from './context/useAuth.tsx';
@@ -13,12 +10,10 @@ import { AppContextProvider } from '@/context/AppContextProvider.tsx';
 import axios from 'axios';
 import { getItem } from '@/lib/utils.ts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import {
-  Transactions,
-  loader as transactLoader,
-} from './views/wallet/components/Transactions.tsx';
 
-const App = lazy(() => import('@/App.tsx'))
+const App = lazy(() => import('@/App.tsx'));
+const Login = lazy(() => import('@/views/login/Login.tsx'));
+const Register = lazy(() => import('@/views/register-page/Register.tsx'));
 
 declare global {
   namespace JSX {
@@ -75,13 +70,31 @@ const router = createBrowserRouter([
       },
       {
         path: 'Wallets',
-        element: <Wallet />,
-        loader: walletLoader(queryClient),
+        async loader() {
+          let { loader: walletLoader } = await import(
+            '@/views/wallet/Wallet.tsx'
+          );
+          return walletLoader(queryClient);
+        },
+        async lazy() {
+          let { Wallet } = await import('@/views/wallet/Wallet.tsx');
+          return { Component: Wallet };
+        },
         children: [
           {
             path: '',
-            element: <Transactions />,
-            loader: transactLoader(queryClient),
+            async loader() {
+              let { loader: transactLoader } = await import(
+                './views/wallet/components/Transactions.tsx'
+              );
+              return transactLoader(queryClient);
+            },
+            async lazy() {
+              let { Transactions } = await import(
+                './views/wallet/components/Transactions.tsx'
+              );
+              return { Component: Transactions };
+            },
           },
         ],
       },

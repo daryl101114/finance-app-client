@@ -21,8 +21,8 @@ function App() {
       <div className="flex h-[7vh] w-full">
         <NavBar />
       </div>
-      <article className='bg-neutral-50 min-h-[93vh] flex justify-center'>
-        <section className='flex-1 min-w-[390px] max-w-[80%]'>
+      <article className="flex min-h-[93vh] justify-center bg-neutral-50">
+        <section className="min-w-[390px] max-w-[80%] flex-1">
           <Outlet />
         </section>
       </article>

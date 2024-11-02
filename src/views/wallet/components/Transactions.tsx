@@ -27,35 +27,33 @@ const Transactions = () => {
   });
 
   const walletsContext = useContext(WalletsContext);
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [isComponentLoading, setComponentLoading] = useState(false);
 
-  useEffect(() => {
-    try {
-      if (!walletsContext?.walletTransactions) return;
-      setComponentLoading(true);
-      const total = walletsContext.walletTransactions.reduce(
-        (acc, { transactionType, amount }) => {
-          const isCredit = transactionType === 'credit';
+  let isComponentLoading = false;
+  let totalAmount = 0;
+  try {
+    if (!walletsContext?.walletTransactions) return;
+    isComponentLoading = true;
+    const total = walletsContext.walletTransactions.reduce(
+      (acc, { transactionType, amount }) => {
+        const isCredit = transactionType === 'credit';
 
-          // Adjust based on account type and transaction type
-          const adjustedAmount = walletsContext.isDebtAccount
-            ? isCredit
-              ? amount
-              : -amount
-            : isCredit
-              ? -amount
-              : amount;
-          return acc + adjustedAmount;
-        },
-        0,
-      );
+        // Adjust based on account type and transaction type
+        const adjustedAmount = walletsContext.isDebtAccount
+          ? isCredit
+            ? amount
+            : -amount
+          : isCredit
+            ? -amount
+            : amount;
+        return acc + adjustedAmount;
+      },
+      0,
+    );
+    totalAmount = total;
+  } finally {
+    isComponentLoading = false;
+  }
 
-      setTotalAmount(total);
-    } finally {
-      setComponentLoading(false);
-    }
-  }, [walletsContext?.walletTransactions]);
   if (isComponentLoading) {
     return (
       <>
@@ -79,9 +77,7 @@ const Transactions = () => {
       <CardHeader className="border-b-2">
         <div className="flex justify-between text-2xl">
           <span className="text-primary-900">Transactions</span>
-          <span className="text-primary">
-            {formatCurrency(totalAmount)}
-          </span>
+          <span className="text-primary">{formatCurrency(totalAmount)}</span>
         </div>
       </CardHeader>
       <CardContent className="grow">
@@ -89,7 +85,7 @@ const Transactions = () => {
           {walletsContext?.walletTransactions?.map((item) => {
             return (
               <div
-                className="align my-2 flex flex-nowrap items-center justify-between font-medium "
+                className="align my-2 flex flex-nowrap items-center justify-between font-medium"
                 key={item.id}
               >
                 <div className="flex flex-nowrap items-center gap-1">

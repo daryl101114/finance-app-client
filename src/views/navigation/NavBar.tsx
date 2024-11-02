@@ -1,4 +1,3 @@
-
 import {
   Drawer,
   DrawerContent,
@@ -8,7 +7,6 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { AlignJustifyIcon } from 'lucide-react';
-import { lazy } from 'react';
 import SideBar from './SideBar';
 
 export const NavBar = () => {
@@ -19,7 +17,7 @@ export const NavBar = () => {
           <DrawerTrigger asChild>
             <AlignJustifyIcon className="mx-4" />
           </DrawerTrigger>
-          <DrawerContent className="right-[200px] sm:right-[70%] md:right-[80%]  h-full">
+          <DrawerContent className="right-[200px] h-full sm:right-[70%] md:right-[80%]">
             <DrawerHeader>
               <DrawerTitle className="flex items-center text-neutral-900">
                 <span className="flex">
@@ -41,7 +39,9 @@ export const NavBar = () => {
           className="w-7 overflow-hidden transition-all"
           src="../../public/5.svg"
         />
-        <p className="w-15 overflow-hidden text-2xl font-medium text-primary transition-all">Budgify</p>
+        <p className="w-15 overflow-hidden text-2xl font-medium text-primary transition-all">
+          Budgify
+        </p>
       </span>
     </>
   );

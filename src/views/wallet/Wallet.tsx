@@ -47,10 +47,9 @@ const Wallet = () => {
     ...userWalletsQuery(),
   });
 
-  const [selectedWallet, setSelectedWalletId] = useState<
-    IWalletType | undefined
-  >(undefined);
-  // const [walletTransactions, setWalletTransactions] = useState<IWalletTransactionType[]>([])
+  const [selectedWallet, setSelectedWallet] = useState<IWalletType | undefined>(
+    undefined,
+  );
 
   const { data: walletTransactions } = useQuery({
     queryKey: ['transactions', selectedWallet?.id],
@@ -60,8 +59,9 @@ const Wallet = () => {
   });
 
   const selectWallet = async (wallet: IWalletType) => {
-    setSelectedWalletId(wallet); // Set selected wallet ID when a wallet is selected
+    setSelectedWallet(wallet); // Set selected wallet ID when a wallet is selected
   };
+
   useEffect(() => {
     if (wallets) {
       selectWallet(wallets[0]);
@@ -69,17 +69,19 @@ const Wallet = () => {
   }, []);
   return (
     <>
-      <div className="flex flex-col min-h-[93vh] gap-2 p-4">
+      <div className="flex min-h-[93vh] flex-col gap-2 p-4">
         <Card className="align-center bg-neutral-100 p-4">
           <CardHeader className=" ">
             <span className="flex w-full justify-center text-2xl text-primary-900">
               Charts
             </span>
           </CardHeader>
-          <CardContent>Maybe a bar chart comparing total credit and debit for each account? </CardContent>
+          <CardContent>
+            Maybe a bar chart comparing total credit and debit for each account?{' '}
+          </CardContent>
         </Card>
         <div className="flex flex-1 flex-wrap gap-2">
-          <Card className=' flex  flex-col w-full md:w-5/12 p-4' >
+          <Card className="flex w-full flex-col p-4 md:w-5/12">
             <CardHeader className="border-b-2">
               <div className="flex items-end justify-between">
                 <span className="text-2xl text-primary-900">Wallets</span>
@@ -100,7 +102,7 @@ const Wallet = () => {
                           id={item.emoji}
                           size="2rem"
                         ></em-emoji>
-                        <div className="grow text-lg text-black text-ellipsis overflow-hidden text-nowrap">
+                        <div className="grow overflow-hidden text-ellipsis text-nowrap text-lg text-black">
                           {item.accountName}
                         </div>
                         <Button variant="ghost" size="icon">
@@ -116,19 +118,19 @@ const Wallet = () => {
               <AddWalletModal />
             </CardFooter>
           </Card>
-         <WalletsContext.Provider
-          value={{
-            wallets: wallets || [],
-            walletTransactions: walletTransactions || [],
-            isDebtAccount: selectedWallet?.walletType.id === 3,
-          }}
-        >
-          <Card className="align-center flex-1 flex flex-col p-4 ">
-            <Outlet />
-          </Card>
-        </WalletsContext.Provider>
-      </div></div>
-        
+          <WalletsContext.Provider
+            value={{
+              wallets: wallets || [],
+              walletTransactions: walletTransactions || [],
+              isDebtAccount: selectedWallet?.walletType.id === 3,
+            }}
+          >
+            <Card className="align-center flex flex-1 flex-col p-4">
+              <Outlet />
+            </Card>
+          </WalletsContext.Provider>
+        </div>
+      </div>
     </>
   );
 };

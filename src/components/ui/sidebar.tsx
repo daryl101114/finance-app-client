@@ -4,7 +4,7 @@ import {
   createContext,
   useState,
   ReactNode,
-  useEffect
+  useEffect,
 } from 'react';
 import { UserRound } from 'lucide-react';
 import { Link } from 'react-router-dom';

@@ -8,7 +8,7 @@ interface AppContextProviderContextType {
   screenSize: number | undefined;
   setScreenSize: React.Dispatch<number | undefined>;
   activeSideBarItem: string;
-  setActiveSidebarItem:React.Dispatch<string>;
+  setActiveSidebarItem: React.Dispatch<string>;
 }
 const AppStateContext = createContext<AppContextProviderContextType | null>(
   null,
@@ -19,14 +19,12 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const [activeSideBarItem, setActiveSidebarItem] = useState<string>('');
   return (
     <AppStateContext.Provider
-      value={
-        { 
-            screenSize: screenSize, 
-            setScreenSize: setScreenSize,
-            activeSideBarItem: activeSideBarItem,
-            setActiveSidebarItem:setActiveSidebarItem 
-        }
-    }
+      value={{
+        screenSize: screenSize,
+        setScreenSize: setScreenSize,
+        activeSideBarItem: activeSideBarItem,
+        setActiveSidebarItem: setActiveSidebarItem,
+      }}
     >
       {children}
     </AppStateContext.Provider>
