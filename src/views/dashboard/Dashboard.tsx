@@ -1,4 +1,3 @@
-import AddExpenseModal from '../../components/modals/AddExpenseModal';
 const Dashboard = () => {
   return (
     <>

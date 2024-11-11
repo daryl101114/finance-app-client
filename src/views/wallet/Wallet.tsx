@@ -61,7 +61,10 @@ const Wallet = () => {
   const selectWallet = async (wallet: IWalletType) => {
     setSelectedWallet(wallet); // Set selected wallet ID when a wallet is selected
   };
-
+  const setActiveWalletStyle = (walletId:string) => {
+    return selectedWallet?.id === walletId ? "flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer bg-primary-50" 
+    :"flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
+  };
   useEffect(() => {
     if (wallets) {
       selectWallet(wallets[0]);
@@ -94,7 +97,7 @@ const Wallet = () => {
                     return (
                       <div
                         key={item.id}
-                        className="flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
+                        className={setActiveWalletStyle(item.id)}
                         onClick={() => selectWallet(item)}
                       >
                         <em-emoji

@@ -133,7 +133,7 @@ const AddTransactionModal = ({
 
   return (
     <>
-      <Drawer direction="right">
+      <Drawer>
         <DrawerTrigger asChild>
           <Button
             className="rounded-full p-2 transition ease-in-out hover:scale-110"

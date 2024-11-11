@@ -10,10 +10,17 @@ import { AppContextProvider } from '@/context/AppContextProvider.tsx';
 import axios from 'axios';
 import { getItem } from '@/lib/utils.ts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const App = lazy(() => import('@/App.tsx'));
-const Login = lazy(() => import('@/views/login/Login.tsx'));
-const Register = lazy(() => import('@/views/register-page/Register.tsx'));
+import { Wallet, loader as walletLoader } from '@/views/wallet/Wallet.tsx';
+import {
+  Transactions,
+  loader as transactLoader,
+} from './views/wallet/components/Transactions.tsx';
+import Login from './views/login/Login.tsx';
+import App from './App.tsx';
+import Register from './views/register-page/Register.tsx';
+// const App = lazy(() => import('@/App.tsx'));
+// const Login = lazy(() => import('@/views/login/Login.tsx'));
+// const Register = lazy(() => import('@/views/register-page/Register.tsx'));
 
 declare global {
   namespace JSX {
@@ -70,31 +77,13 @@ const router = createBrowserRouter([
       },
       {
         path: 'Wallets',
-        async loader() {
-          let { loader: walletLoader } = await import(
-            '@/views/wallet/Wallet.tsx'
-          );
-          return walletLoader(queryClient);
-        },
-        async lazy() {
-          let { Wallet } = await import('@/views/wallet/Wallet.tsx');
-          return { Component: Wallet };
-        },
+        element: <Wallet />,
+        loader: walletLoader(queryClient),
         children: [
           {
             path: '',
-            async loader() {
-              let { loader: transactLoader } = await import(
-                './views/wallet/components/Transactions.tsx'
-              );
-              return transactLoader(queryClient);
-            },
-            async lazy() {
-              let { Transactions } = await import(
-                './views/wallet/components/Transactions.tsx'
-              );
-              return { Component: Transactions };
-            },
+            element: <Transactions />,
+            loader: transactLoader(queryClient),
           },
         ],
       },
