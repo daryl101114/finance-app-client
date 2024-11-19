@@ -1,29 +1,26 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import ReactDOM from 'react-dom/client';
-import Login from './views/login/Login.tsx';
 import './styles/index.css';
-import App from './App.tsx';
 import ErrorPage from './views/error-page/ErrorPage.tsx';
-import Register from './views/register-page/Register.tsx';
 import Dashboard from './views/dashboard/Dashboard.tsx';
-import { Wallet, loader as walletLoader } from '@/views/wallet/Wallet.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import PrivateRoutes from './components/PrivateRoutes.tsx';
-import { AuthProvider } from './hooks/useAuth';
+import { AuthProvider } from './context/useAuth.tsx';
+import { AppContextProvider } from '@/context/AppContextProvider.tsx';
 import axios from 'axios';
 import { getItem } from '@/lib/utils.ts';
-import data from '@emoji-mart/data';
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Wallet } from '@/views/wallet/Wallet.tsx';
+import {loader as walletLoader} from '@/App.tsx'
 import {
   Transactions,
   loader as transactLoader,
 } from './views/wallet/components/Transactions.tsx';
+import Login from './views/login/Login.tsx';
+import App from './App.tsx';
+import Register from './views/register-page/Register.tsx';
+import { Provider } from 'react-redux'
+import {store} from '@/store/store.ts'
 
 declare global {
   namespace JSX {
@@ -35,15 +32,41 @@ declare global {
     }
   }
 }
+
+axios.create({
+  baseURL: 'https://localhost:7126',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 //Attaches the bearer token to the Authoriation header
 axios.interceptors.request.use(function (config) {
-  const token: string = getItem('token') || '';
-  config.headers.Authorization = `Bearer ${token}`;
+  const token: string | null = getItem('token');
+  if(token){
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
   return config;
 });
+
+axios.interceptors.response.use(
+  response => response, // Directly return successful responses.
+  async (error) => {
+    const originalRequest = error.config; //Captures original HTTP request meta data
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; 
+      //Try Refreshing Token here....
+
+      //For now let's logout the user until refresh api is implemented
+      localStorage.clear();
+      window.location.href = '/login';
+    }
+    return Promise.reject(error)
+  }
+)
+
 // Create a client
-// const queryClient = new QueryClient()
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -67,6 +90,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
+    loader: walletLoader(queryClient),
     element: (
       //Add route guards
       <PrivateRoutes>
@@ -82,7 +106,6 @@ const router = createBrowserRouter([
       {
         path: 'Wallets',
         element: <Wallet />,
-        loader: walletLoader(queryClient),
         children: [
           {
             path: '',
@@ -92,7 +115,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'Wallets',
+        path: 'Budgets',
         element: (
           <div className="p-5 text-5xl font-semibold text-primary">Budgets</div>
         ),
@@ -108,11 +131,17 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
+  
   <AuthProvider>
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <AppContextProvider>
+        <Provider store={store} >
+          <RouterProvider router={router} />
+        </Provider>
+        </AppContextProvider>
       </QueryClientProvider>
     </React.StrictMode>
-  </AuthProvider>,
+  </AuthProvider>
+  
 );

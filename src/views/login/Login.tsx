@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ILoginUser } from '../../configs/types/User';
-import { loginUser } from '../../api/login/login';
+import { loginUser } from '@/api/login';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@/context/useAuth';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { jwtDecode } from 'jwt-decode';
@@ -14,10 +14,6 @@ const Login: React.FC = () => {
 
   const { authenticate } = useAuth();
 
-  // useEffect(() => {
-  //   console.log( 'AUTH');
-
-  // }, []);
   interface DecodedTokenType {
     exp?: number | undefined;
     given_name: string;

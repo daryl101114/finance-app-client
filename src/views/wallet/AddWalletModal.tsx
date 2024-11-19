@@ -83,7 +83,7 @@ const AddWalletModal = () => {
       emoji: WalletIcons[values.walletType],
     };
 
-    //Add Wwallet
+    //Add Wallet
     mutation.mutate(wallet);
     form.reset();
     setOpen(false);

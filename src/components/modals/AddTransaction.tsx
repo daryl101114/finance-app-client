@@ -3,7 +3,6 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -43,11 +42,10 @@ import {
   TransactionCategoriesTypes,
   ITransaction,
 } from '@/configs/types/Transaction';
-import { useContext, useState } from 'react';
-import { WalletsContext } from '@/views/wallet/Wallet'; //*
+import {  useState } from 'react';
 import { addTransaction } from '@/api/transactions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
+import { useUserWalletsQuery } from '@/views/wallet/Wallet';
 interface transactionCategoriesProps {
   transactionCategories: TransactionCategoriesTypes[];
 }
@@ -83,8 +81,17 @@ const formSchema = z.object({
 const AddTransactionModal = ({
   transactionCategories,
 }: transactionCategoriesProps) => {
-  const queryClient = useQueryClient(); //Query qlient to interact with query cache
-  const walletsContext = useContext(WalletsContext); //*
+  const { data: wallets } = useUserWalletsQuery();
+  //Query qlient to interact with query cache
+  const queryClient = useQueryClient(); 
+  //CONTEXT
+
+  //COMPONENT STATES
+  const [open, setOpen] = useState(false);
+  const [selectedWalletId, setSelectedWalletId] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
+  //FORM Schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -98,7 +105,8 @@ const AddTransactionModal = ({
       transactionCategoryId: '',
     },
   });
-  const [selectedWalletId, setSelectedWalletId] = useState('');
+
+  // Handle Mutation
   const mutation = useMutation({
     mutationFn: async (form: ITransaction) => {
       await addTransaction(form);
@@ -110,7 +118,9 @@ const AddTransactionModal = ({
     },
   });
 
+  //Submit form
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     let transaction: ITransaction = {
       ...values,
       createdAt: new Date(),
@@ -118,11 +128,13 @@ const AddTransactionModal = ({
     setSelectedWalletId(values.walletId);
     mutation.mutate(transaction);
     form.reset();
+    setLoading(false);
+    setOpen(false);
   }
 
   return (
     <>
-      <Drawer direction="right">
+      <Drawer>
         <DrawerTrigger asChild>
           <Button
             className="rounded-full p-2 transition ease-in-out hover:scale-110"
@@ -166,7 +178,7 @@ const AddTransactionModal = ({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {walletsContext?.wallets?.map((wallet) => {
+                              {wallets?.map((wallet) => {
                                 return (
                                   <SelectItem key={wallet.id} value={wallet.id}>
                                     <em-emoji id={wallet.emoji} size="1rem" />
@@ -349,7 +361,25 @@ const AddTransactionModal = ({
                       )}
                     />
                     <Button className="w-full" type="submit">
-                      Add Transaction
+                      {isLoading ? (
+                        <div>
+                          <svg
+                            className="... mr-3 h-5 w-5 animate-spin"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            >
+                              {' '}
+                            </path>
+                          </svg>{' '}
+                          Processing...
+                        </div>
+                      ) : (
+                        <div>Add Transaction</div>
+                      )}
                     </Button>
                     <DrawerClose asChild>
                       <Button className="w-full" variant="outline">
