@@ -3,8 +3,7 @@ import AddTransactionModal from '@/components/modals/AddTransaction';
 import { getTransactionCategories, getTransactions } from '@/api/transactions';
 import { LoaderFunctionArgs } from 'react-router-dom';
 import { useQuery, QueryClient } from '@tanstack/react-query';
-import { WalletsContext } from '@/views/wallet/Wallet';
-import { useContext, useEffect, useState } from 'react';
+import { userWalletsContext } from '@/views/wallet/Wallet';
 import { formatCurrency } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Icon from '@/components/ui/icon';
@@ -20,25 +19,30 @@ const loader =
     const url = new URL(request.url);
     return url;
   };
+export const useTransactionCategoriesQuery = () => useQuery({
+  ...transactionCategoriesQuery(),
+});
 
 const Transactions = () => {
-  const { data: transactionCategories } = useQuery({
-    ...transactionCategoriesQuery(),
+  console.log("Render Transaction")
+  const walletsContext = userWalletsContext();
+
+  //NOTE: Will cause a rerender when s
+  const { data: walletTransactions, isLoading } = useQuery({
+    queryKey: ['transactions', walletsContext?.selectedWallet?.id],
+    queryFn: async () => getTransactions(walletsContext?.selectedWallet?.id || ''),
+    enabled: !!walletsContext?.selectedWallet?.id, // disable this query from automatically running
+    refetchOnWindowFocus: false,
   });
 
-  const walletsContext = useContext(WalletsContext);
-
-  let isComponentLoading = false;
   let totalAmount = 0;
-  try {
-    if (!walletsContext?.walletTransactions) return;
-    isComponentLoading = true;
-    const total = walletsContext.walletTransactions.reduce(
+    if (!walletTransactions) return;
+    const total =walletTransactions.reduce(
       (acc, { transactionType, amount }) => {
         const isCredit = transactionType === 'credit';
 
         // Adjust based on account type and transaction type
-        const adjustedAmount = walletsContext.isDebtAccount
+        const adjustedAmount = walletsContext?.isDebtAccount
           ? isCredit
             ? amount
             : -amount
@@ -50,11 +54,8 @@ const Transactions = () => {
       0,
     );
     totalAmount = total;
-  } finally {
-    isComponentLoading = false;
-  }
 
-  if (isComponentLoading) {
+  if (isLoading) {
     return (
       <>
         <div className="flex h-full w-full items-center justify-center">
@@ -82,7 +83,7 @@ const Transactions = () => {
       </CardHeader>
       <CardContent className="grow">
         <ScrollArea>
-          {walletsContext?.walletTransactions?.map((item) => {
+          {walletTransactions?.map((item) => {
             return (
               <div
                 className="align my-2 flex flex-nowrap items-center justify-between font-medium"
@@ -111,9 +112,9 @@ const Transactions = () => {
         </ScrollArea>
       </CardContent>
       <CardFooter className="itmes-center flex w-full justify-center border-t-2 p-4">
-        <AddTransactionModal
+        {/* <AddTransactionModal
           transactionCategories={transactionCategories || []}
-        />
+        /> */}
       </CardFooter>
     </>
   );

@@ -11,70 +11,54 @@ import { init } from 'emoji-mart';
 import data from '@emoji-mart/data';
 import { Button } from '@/components/ui/button';
 import { EllipsisVerticalIcon } from 'lucide-react';
-import { useQuery, QueryClient } from '@tanstack/react-query';
-import { LoaderFunctionArgs, Outlet } from 'react-router-dom';
-import { createContext, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Outlet, useOutletContext } from 'react-router-dom';
+import { createContext, useMemo, useState } from 'react';
 import { getTransactions } from '@/api/transactions';
 import { IWalletTransactionType } from '@/configs/types/Transaction';
 import { ScrollArea } from '@/components/ui/scroll-area';
 init({ data });
 
-const userWalletsQuery = () => ({
+export const userWalletsQuery = () => ({
   queryKey: ['userWallets'],
-  queryFn: async () => getUserWallets(),
+  queryFn: async () => getUserWallets()
 });
 
-const loader =
-  (queryClient: QueryClient) =>
-  async ({ request }: LoaderFunctionArgs) => {
-    console.log(request);
-    await queryClient.ensureQueryData(userWalletsQuery());
+export const useUserWalletsQuery = () => useQuery({
+  ...userWalletsQuery(),
+});
 
-    const url = new URL(request.url);
-    return url;
-  };
+
 interface WalletsContextType {
-  wallets: IWalletType[];
-  walletTransactions: IWalletTransactionType[];
   isDebtAccount: boolean;
+  selectedWallet:IWalletType
 }
-export const WalletsContext = createContext<WalletsContextType | undefined>(
-  undefined,
-);
 
 const Wallet = () => {
-  const { data: wallets } = useQuery({
-    ...userWalletsQuery(),
-  });
-
-  const [selectedWallet, setSelectedWallet] = useState<IWalletType | undefined>(
-    undefined,
+  console.log("RERENDER")
+  const { data: wallets = [] } = useUserWalletsQuery();
+  const [selectedWallet, setSelectedWallet] = useState<IWalletType>(
+    wallets[0]
   );
 
-  const { data: walletTransactions } = useQuery({
-    queryKey: ['transactions', selectedWallet?.id],
-    queryFn: async () => await getTransactions(selectedWallet?.id || ''),
-    enabled: !!selectedWallet?.id, // disable this query from automatically running
-    refetchOnWindowFocus: false,
-  });
-
   const selectWallet = async (wallet: IWalletType) => {
-    setSelectedWallet(wallet); // Set selected wallet ID when a wallet is selected
-  };
-  const setActiveWalletStyle = (walletId:string) => {
-    return selectedWallet?.id === walletId ? "flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer bg-primary-50" 
-    :"flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer hover:bg-primary-50"
-  };
-  useEffect(() => {
-    if (wallets) {
-      selectWallet(wallets[0]);
+    if(selectedWallet?.id !== wallet.id){
+      setSelectedWallet(wallet); // Set selected wallet ID when a wallet is selected
     }
-  }, []);
+  };
+
+  const setActiveWalletStyle = (walletId: string) => {
+  const baseStyle = "flex items-end gap-1 rounded-md p-1 transition ease-in-out hover:-translate-y-1 hover:cursor-pointer";
+  const activeStyle = selectedWallet?.id === walletId ? "bg-primary-50" : "hover:bg-primary-50";
+
+  return `${baseStyle} ${activeStyle}`;
+  };
+
   return (
     <>
       <div className="flex min-h-[93vh] flex-col gap-2 p-4">
         <Card className="align-center bg-neutral-100 p-4">
-          <CardHeader className=" ">
+          <CardHeader>
             <span className="flex w-full justify-center text-2xl text-primary-900">
               Charts
             </span>
@@ -121,21 +105,18 @@ const Wallet = () => {
               <AddWalletModal />
             </CardFooter>
           </Card>
-          <WalletsContext.Provider
-            value={{
-              wallets: wallets || [],
-              walletTransactions: walletTransactions || [],
-              isDebtAccount: selectedWallet?.walletType.id === 3,
-            }}
-          >
             <Card className="align-center flex flex-1 flex-col p-4">
-              <Outlet />
+              <Outlet context={{
+                  selectedWallet: selectedWallet,
+                  isDebtAccount: selectedWallet?.walletType.id === 3,
+                }satisfies WalletsContextType}/>
             </Card>
-          </WalletsContext.Provider>
         </div>
       </div>
     </>
   );
 };
-
-export { Wallet, loader };
+export function userWalletsContext() {
+  return useOutletContext<WalletsContextType>();
+}
+export { Wallet };

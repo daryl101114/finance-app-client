@@ -3,7 +3,6 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -43,11 +42,10 @@ import {
   TransactionCategoriesTypes,
   ITransaction,
 } from '@/configs/types/Transaction';
-import { useContext, useState } from 'react';
-import { WalletsContext } from '@/views/wallet/Wallet'; //*
+import {  useState } from 'react';
 import { addTransaction } from '@/api/transactions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
+import { useUserWalletsQuery } from '@/views/wallet/Wallet';
 interface transactionCategoriesProps {
   transactionCategories: TransactionCategoriesTypes[];
 }
@@ -83,14 +81,17 @@ const formSchema = z.object({
 const AddTransactionModal = ({
   transactionCategories,
 }: transactionCategoriesProps) => {
+  const { data: wallets } = useUserWalletsQuery();
+  //Query qlient to interact with query cache
+  const queryClient = useQueryClient(); 
+  //CONTEXT
+
   //COMPONENT STATES
-  const queryClient = useQueryClient(); //Query qlient to interact with query cache
-  const walletsContext = useContext(WalletsContext); //*
   const [open, setOpen] = useState(false);
   const [selectedWalletId, setSelectedWalletId] = useState('');
   const [isLoading, setLoading] = useState(false);
 
-  //FORM
+  //FORM Schema
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -105,7 +106,7 @@ const AddTransactionModal = ({
     },
   });
 
-  //Query
+  // Handle Mutation
   const mutation = useMutation({
     mutationFn: async (form: ITransaction) => {
       await addTransaction(form);
@@ -177,7 +178,7 @@ const AddTransactionModal = ({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {walletsContext?.wallets?.map((wallet) => {
+                              {wallets?.map((wallet) => {
                                 return (
                                   <SelectItem key={wallet.id} value={wallet.id}>
                                     <em-emoji id={wallet.emoji} size="1rem" />

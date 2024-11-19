@@ -10,7 +10,8 @@ import { AppContextProvider } from '@/context/AppContextProvider.tsx';
 import axios from 'axios';
 import { getItem } from '@/lib/utils.ts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Wallet, loader as walletLoader } from '@/views/wallet/Wallet.tsx';
+import { Wallet } from '@/views/wallet/Wallet.tsx';
+import {loader as walletLoader} from '@/App.tsx'
 import {
   Transactions,
   loader as transactLoader,
@@ -18,9 +19,8 @@ import {
 import Login from './views/login/Login.tsx';
 import App from './App.tsx';
 import Register from './views/register-page/Register.tsx';
-// const App = lazy(() => import('@/App.tsx'));
-// const Login = lazy(() => import('@/views/login/Login.tsx'));
-// const Register = lazy(() => import('@/views/register-page/Register.tsx'));
+import { Provider } from 'react-redux'
+import {store} from '@/store/store.ts'
 
 declare global {
   namespace JSX {
@@ -32,13 +32,40 @@ declare global {
     }
   }
 }
+
+axios.create({
+  baseURL: 'https://localhost:7126',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 //Attaches the bearer token to the Authoriation header
 axios.interceptors.request.use(function (config) {
-  const token: string = getItem('token') || '';
-  config.headers.Authorization = `Bearer ${token}`;
+  const token: string | null = getItem('token');
+  if(token){
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
   return config;
 });
+
+axios.interceptors.response.use(
+  response => response, // Directly return successful responses.
+  async (error) => {
+    const originalRequest = error.config; //Captures original HTTP request meta data
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; 
+      //Try Refreshing Token here....
+
+      //For now let's logout the user until refresh api is implemented
+      localStorage.clear();
+      window.location.href = '/login';
+    }
+    return Promise.reject(error)
+  }
+)
+
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,6 +90,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
+    loader: walletLoader(queryClient),
     element: (
       //Add route guards
       <PrivateRoutes>
@@ -78,7 +106,6 @@ const router = createBrowserRouter([
       {
         path: 'Wallets',
         element: <Wallet />,
-        loader: walletLoader(queryClient),
         children: [
           {
             path: '',
@@ -104,13 +131,17 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
+  
   <AuthProvider>
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <AppContextProvider>
+        <Provider store={store} >
           <RouterProvider router={router} />
+        </Provider>
         </AppContextProvider>
       </QueryClientProvider>
     </React.StrictMode>
-  </AuthProvider>,
+  </AuthProvider>
+  
 );
